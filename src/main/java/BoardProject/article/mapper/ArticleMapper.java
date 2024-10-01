@@ -2,7 +2,10 @@ package BoardProject.article.mapper;
 
 import BoardProject.article.dto.ArticleDto;
 import BoardProject.article.entity.Article;
+import org.mapstruct.Mapper;
 
+
+@Mapper (componentModel = "spring")
 public interface ArticleMapper {
 
 
