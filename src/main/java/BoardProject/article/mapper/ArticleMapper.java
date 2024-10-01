@@ -3,9 +3,10 @@ package BoardProject.article.mapper;
 import BoardProject.article.dto.ArticleDto;
 import BoardProject.article.entity.Article;
 import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
 
 
-@Mapper (componentModel = "spring")
+@Mapper (componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ArticleMapper {
 
 

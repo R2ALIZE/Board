@@ -6,6 +6,7 @@ import lombok.*;
 import java.util.Date;
 
 @Entity
+@Table(name = "article")
 @Getter // dto - entity 간의 매핑 과정에서 mapper가 getter를 통해 접근
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // Proxy를 이용한 지연로딩
