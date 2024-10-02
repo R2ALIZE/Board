@@ -1,9 +1,12 @@
 package BoardProject.article.entity;
 
+import BoardProject.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -14,7 +17,8 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // Proxy를 이용한 지연로딩
 @AllArgsConstructor
-public class Article {
+
+public class Article extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,19 +30,10 @@ public class Article {
     @Column
     private String body;
 
-    @Column
-    @CreatedDate
-    private LocalDateTime createdAt;
-
-    @Column
-    @LastModifiedDate
-    private LocalDateTime modifiedAt;
-
     public Article articleBuilder (String title,String body, LocalDateTime createdAt) {
         return new Article().builder()
                                         .title(title)
                                         .body(body)
-                                        .createdAt(createdAt)
                                         .build();
     }
 
