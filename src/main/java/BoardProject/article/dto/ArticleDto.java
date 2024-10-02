@@ -1,9 +1,12 @@
 package BoardProject.article.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.util.Date;
 
+
+@Getter
 @AllArgsConstructor
 public class ArticleDto {
 
@@ -12,6 +15,7 @@ public class ArticleDto {
     private String body;
 
 
+    @Getter
     public static class Request { // Client에서 Article 생성할 때 입력하는 정보
 
         private String title;
@@ -21,10 +25,10 @@ public class ArticleDto {
 
     }
 
+
+    @Getter
     public static class Response {
 
-
-        private String author;
 
         private String title;
 

@@ -8,10 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,30 +22,28 @@ public class ArticleService {
     @Autowired
     private ArticleMapper mapper;
 
-    public ArticleDto.Response findArticle(Long userId) throws Exception {
+    public Article findArticle(Long articleId) throws Exception {
 
-        Article foundArticle = Optional.ofNullable(articleRepository.findById(userId))
+        Article foundArticle = Optional.ofNullable(articleRepository.findById(articleId))
                                         .orElseThrow(Exception::new).get();
 
-         return mapper.convertArticleToArticleResponseDto(foundArticle);
+         return foundArticle;
 
     }
 
     public Page<Article> findArticles(int page, int size) {
 
-        Pageable pageable = PageRequest.of(page-1, size, Sort.Direction.ASC);
+        Pageable pageable = PageRequest.of(page-1, size);
 
         return articleRepository.findAll(pageable);
 
     }
 
-    public void createArticle(ArticleDto.Request articlePostDto) {
-
-        Article articleInfo = mapper.convertArticlePostDtoToArticle(articlePostDto);
+    public void createArticle(ArticleDto.Request articleRequestDto) {
 
         Article article = Article.builder()
-                                            .title(articleInfo.getTitle())
-                                            .body(articleInfo.getBody())
+                                            .title(articleRequestDto.getTitle())
+                                            .body(articleRequestDto.getBody())
                                             .build();
 
         articleRepository.save(article);
@@ -55,14 +51,14 @@ public class ArticleService {
 
     public void updateArticle(Long articleId, ArticleDto.Request articleRequestDto) throws Exception {
 
-        Article articleInfo = mapper.convertArticlePostDtoToArticle(articleRequestDto);
 
         Article ArticleInDb = articleRepository.findById(articleId)
                                                .orElseThrow(Exception::new);
 
-        ArticleInDb.updateArticle(articleInfo.getTitle(),articleInfo.getBody());
+        ArticleInDb.updateArticle(articleRequestDto.getTitle(),articleRequestDto.getBody());
 
-     articleRepository.save(ArticleInDb);
+        articleRepository.save(ArticleInDb);
+
     }
 
     public void removeArticle(Long articleId) {
