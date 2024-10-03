@@ -1,37 +1,64 @@
 package BoardProject.article.mapper;
 
-import BoardProject.article.dto.ArticleDto;
+import BoardProject.article.dto.ArticleMultiResponseDto;
+import BoardProject.article.dto.ArticleRequestDto;
+import BoardProject.article.dto.ArticleResponseDto;
 import BoardProject.article.entity.Article;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-10-02T14:37:27+0900",
+    date = "2024-10-03T19:42:56+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.11 (Azul Systems, Inc.)"
 )
 @Component
 public class ArticleMapperImpl implements ArticleMapper {
 
     @Override
-    public Article convertArticlePostDtoToArticle(ArticleDto.Request articleRequestDto) {
+    public Article ArticlePostDtoToArticle(ArticleRequestDto articleRequestDto) {
         if ( articleRequestDto == null ) {
             return null;
         }
 
         Article.ArticleBuilder article = Article.builder();
 
+        article.title( articleRequestDto.getTitle() );
+        article.body( articleRequestDto.getBody() );
+
         return article.build();
     }
 
     @Override
-    public ArticleDto.Response convertArticleToArticleResponseDto(Article article) {
+    public ArticleResponseDto ArticleToArticleResponseDto(Article article) {
         if ( article == null ) {
             return null;
         }
 
-        ArticleDto.Response response = new ArticleDto.Response();
+        ArticleResponseDto.ArticleResponseDtoBuilder articleResponseDto = ArticleResponseDto.builder();
 
-        return response;
+        articleResponseDto.title( article.getTitle() );
+        articleResponseDto.body( article.getBody() );
+        articleResponseDto.createdAt( article.getCreatedAt() );
+        articleResponseDto.modifiedAt( article.getModifiedAt() );
+
+        return articleResponseDto.build();
+    }
+
+    @Override
+    public ArticleMultiResponseDto ArticleToMultiResponseDto(Article article) {
+        if ( article == null ) {
+            return null;
+        }
+
+        ArticleMultiResponseDto.ArticleMultiResponseDtoBuilder articleMultiResponseDto = ArticleMultiResponseDto.builder();
+
+        articleMultiResponseDto.id( article.getId() );
+        articleMultiResponseDto.title( article.getTitle() );
+        articleMultiResponseDto.body( article.getBody() );
+        articleMultiResponseDto.createdAt( article.getCreatedAt() );
+        articleMultiResponseDto.modifiedAt( article.getModifiedAt() );
+
+        return articleMultiResponseDto.build();
     }
 }

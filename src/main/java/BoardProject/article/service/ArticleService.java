@@ -1,6 +1,8 @@
 package BoardProject.article.service;
 
-import BoardProject.article.dto.ArticleDto;
+import BoardProject.article.dto.ArticleMultiResponseDto;
+import BoardProject.article.dto.ArticleRequestDto;
+import BoardProject.article.dto.ArticleResponseDto;
 import BoardProject.article.entity.Article;
 import BoardProject.article.mapper.ArticleMapper;
 import BoardProject.article.repository.ArticleRepository;
@@ -10,7 +12,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ArticleService {
@@ -22,24 +26,30 @@ public class ArticleService {
     @Autowired
     private ArticleMapper mapper;
 
-    public Article findArticle(Long articleId) throws Exception {
+    public ArticleResponseDto findArticle(Long articleId) throws Exception {
 
         Article foundArticle = Optional.ofNullable(articleRepository.findById(articleId))
                                         .orElseThrow(Exception::new).get();
 
-         return foundArticle;
+        ArticleResponseDto response =  mapper.ArticleToArticleResponseDto(foundArticle);
 
+        return response;
     }
 
-    public Page<Article> findArticles(int page, int size) {
+    public List<ArticleMultiResponseDto> findArticles(int page, int size) {
 
         Pageable pageable = PageRequest.of(page-1, size);
 
-        return articleRepository.findAll(pageable);
+        List<Article> articles = articleRepository.findAll(pageable).getContent();
+
+        List<ArticleMultiResponseDto> response = articles.stream()
+                                                          .map(article -> mapper.ArticleToMultiResponseDto(article))
+                                                          .collect(Collectors.toList());
+        return response;
 
     }
 
-    public void createArticle(ArticleDto.Request articleRequestDto) {
+    public void createArticle(ArticleRequestDto articleRequestDto) {
 
         Article article = Article.builder()
                                             .title(articleRequestDto.getTitle())
@@ -49,7 +59,7 @@ public class ArticleService {
         articleRepository.save(article);
     }
 
-    public void updateArticle(Long articleId, ArticleDto.Request articleRequestDto) throws Exception {
+    public void updateArticle(Long articleId, ArticleRequestDto articleRequestDto) throws Exception {
 
 
         Article ArticleInDb = articleRepository.findById(articleId)

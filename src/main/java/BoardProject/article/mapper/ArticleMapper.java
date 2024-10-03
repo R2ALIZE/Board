@@ -1,6 +1,8 @@
 package BoardProject.article.mapper;
 
-import BoardProject.article.dto.ArticleDto;
+import BoardProject.article.dto.ArticleMultiResponseDto;
+import BoardProject.article.dto.ArticleRequestDto;
+import BoardProject.article.dto.ArticleResponseDto;
 import BoardProject.article.entity.Article;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
@@ -12,7 +14,9 @@ public interface ArticleMapper {
 
     // DTO - ENTITY 간의 변환 책임을 맡은 Mapper 클래스
 
-    Article convertArticlePostDtoToArticle (ArticleDto.Request articleRequestDto);
+    Article ArticlePostDtoToArticle (ArticleRequestDto articleRequestDto);
 
-    ArticleDto.Response convertArticleToArticleResponseDto (Article article);
+    ArticleResponseDto ArticleToArticleResponseDto (Article article);
+
+    ArticleMultiResponseDto ArticleToMultiResponseDto (Article article);
 }
