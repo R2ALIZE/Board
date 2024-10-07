@@ -6,6 +6,8 @@ import BoardProject.article.dto.ArticleResponseDto;
 import BoardProject.article.entity.Article;
 import BoardProject.article.mapper.ArticleMapper;
 import BoardProject.article.repository.ArticleRepository;
+import BoardProject.global.exception.BusinessLogicException;
+import BoardProject.global.exception.StatusCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,10 +28,12 @@ public class ArticleService {
     @Autowired
     private ArticleMapper mapper;
 
-    public ArticleResponseDto findArticle(Long articleId) throws Exception {
+    public ArticleResponseDto findArticle(Long articleId) throws BusinessLogicException {
 
-        Article foundArticle = Optional.ofNullable(articleRepository.findById(articleId))
-                                        .orElseThrow(Exception::new).get();
+        Article foundArticle = articleRepository.findById(articleId)
+                                                .orElseThrow(
+                                                        () -> new BusinessLogicException(StatusCode.ARTICLE_NOT_EXIST)
+                                                );
 
         ArticleResponseDto response =  mapper.ArticleToArticleResponseDto(foundArticle);
 
@@ -63,7 +67,9 @@ public class ArticleService {
 
 
         Article ArticleInDb = articleRepository.findById(articleId)
-                                               .orElseThrow(Exception::new);
+                                               .orElseThrow(
+                                                       () -> new BusinessLogicException(StatusCode.ARTICLE_NOT_EXIST)
+                                               );
 
         ArticleInDb.updateArticle(articleRequestDto.getTitle(),articleRequestDto.getBody());
 

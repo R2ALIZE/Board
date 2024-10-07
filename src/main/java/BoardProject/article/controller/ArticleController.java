@@ -5,6 +5,7 @@ import BoardProject.article.dto.ArticleRequestDto;
 import BoardProject.article.dto.ArticleResponseDto;
 import BoardProject.article.entity.Article;
 import BoardProject.article.service.ArticleService;
+import BoardProject.global.exception.StatusCode;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class ArticleController {
     @PostMapping
     public ResponseEntity postArticle (@RequestBody @Valid ArticleRequestDto articleRequestDto) {
         articleService.createArticle(articleRequestDto);
-        return new ResponseEntity<>(HttpStatusCode.valueOf(200));
+        return new ResponseEntity (HttpStatusCode.valueOf(200));
     }
 
     // 아티클 수정
@@ -53,8 +54,9 @@ public class ArticleController {
 
     // 아티클 삭제
     @DeleteMapping ("/{article-id}")
-    public void deleteArticle (@Positive @PathVariable ("article-id") Long articleId) {
+    public ResponseEntity deleteArticle (@Positive @PathVariable ("article-id") Long articleId) {
         articleService.removeArticle(articleId);
+        return new ResponseEntity (HttpStatusCode.valueOf(204));
     }
 
 
