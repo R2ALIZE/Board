@@ -30,7 +30,7 @@ public class ErrorResponse {
 
 
     ErrorResponse(final StatusCode code) {
-        this.status = code.getHttpStatus();
+        this.status = code.getStatus();
         this.divisionCode = code.getDivisionCode();
         this.resultMessage = code.getMessage();
     }

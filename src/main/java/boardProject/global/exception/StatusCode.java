@@ -50,14 +50,14 @@ public enum StatusCode {
 
 
 
-    private final int httpStatus;
+    private final int status;
 
     private final String divisionCode;
 
     private final String message;
 
-    StatusCode(int httpStatus, String divisionCode, String message) {
-        this.httpStatus = httpStatus;
+    StatusCode(int status, String divisionCode, String message) {
+        this.status = status;
         this.divisionCode = divisionCode;
         this.message = message;
     }

@@ -17,14 +17,10 @@ public class executeTimeChecker {
     @Around("execution(* boardProject..*(..))")
     public Object executionTimeCheck (ProceedingJoinPoint pjp) throws Throwable {
 
-        String className = pjp.getTarget().getClass().getName();
-
+        String className = pjp.getTarget().getClass().getSimpleName();
         String methodName = pjp.getSignature().getName();
-
         StopWatch stopWatch = new StopWatch();
-
         long elapsedTime;
-
         Object retValue = null;
 
 
