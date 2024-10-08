@@ -24,8 +24,8 @@ public enum StatusCode {
 
 
     //// Article
-    INPUT_INVALID(400,"E001","INVALID INPUT DATA TYPE"),
-    ARTICLE_NOT_EXIST(404,"E002","REQUESTED ARTICLE NOT EXIST IN DB")
+    ARTICLE_NOT_EXIST(404,"E001","REQUESTED ARTICLE NOT EXIST IN DB"),
+    ARTICLE_REPO_EMPTY(404,"E002","ARTICLE REPOSITORY EMPTY"),
 
 
 
@@ -41,7 +41,8 @@ public enum StatusCode {
     //// Auth
 
 
-
+    //
+    INDISCERNIBLE_EXCEPTION (500,"E999", "INDISCERNIBLE EXCEPTION HAPPENED")
 
 
     // Error Code END ------------------------------------------------------------

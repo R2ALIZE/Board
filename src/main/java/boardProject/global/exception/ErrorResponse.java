@@ -18,7 +18,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorResponse {
 
-    private String timeStamp = TimeUtil.getNowAsUtcZero() + " (UTC+0)";
+    private String timeStamp = TimeUtil.getNowAsUtcZero();
 
     private Integer status;
 
@@ -35,6 +35,15 @@ public class ErrorResponse {
         this.resultMessage = code.getMessage();
     }
 
+    ErrorResponse(final Exception e) {
+        this.status = 500;
+        this.divisionCode = "E999";
+        this.resultMessage = e.toString();
+    }
+
+
+
+
 
     ErrorResponse (List<RequestFieldError> fieldErrors ) {
         this.validationErrors = fieldErrors;
@@ -46,6 +55,10 @@ public class ErrorResponse {
 
     public static ErrorResponse of (BindingResult bindingResult) {
         return new ErrorResponse(RequestFieldError.of(bindingResult));
+    }
+
+    public static ErrorResponse of (Exception e) {
+        return new ErrorResponse(e);
     }
 
 

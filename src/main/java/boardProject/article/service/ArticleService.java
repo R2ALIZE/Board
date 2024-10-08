@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 @Service
 public class ArticleService {
 
-
     @Autowired
     private  ArticleRepository articleRepository;
 
@@ -44,6 +43,8 @@ public class ArticleService {
     }
 
     public Response<MultiArticleResponse> findArticles(int page, int size) {
+
+        checkArticleRepoEmpty();
 
         Pageable pageable = PageRequest.of(page-1, size);
 
@@ -75,14 +76,16 @@ public class ArticleService {
                                                                 throws BusinessLogicException {
 
 
-        Article ArticleInDb = articleRepository.findById(articleId)
+        Article articleInDb = articleRepository.findById(articleId)
                                                .orElseThrow(
                                                        () -> new BusinessLogicException(StatusCode.ARTICLE_NOT_EXIST)
                                                );
 
-        ArticleInDb.updateArticle(articleRequestDto.getTitle(),articleRequestDto.getBody());
+        Article articleinfo = mapper.ArticlePostDtoToArticle(articleRequestDto);
 
-        articleRepository.save(ArticleInDb);
+        articleInDb.updateArticle(articleinfo.getTitle(),articleinfo.getBody());
+
+        articleRepository.save(articleInDb);
 
         return new Response<>(StatusCode.UPDATE_SUCCESS, null);
 
@@ -98,9 +101,15 @@ public class ArticleService {
 
     }
 
-    private void checkArticleExistOrThrow(Long articleId) throws BusinessLogicException {
+    public void checkArticleExistOrThrow(Long articleId) throws BusinessLogicException {
         if(articleRepository.existsById(articleId) == false) {
             throw new BusinessLogicException(StatusCode.ARTICLE_NOT_EXIST);
+        }
+    }
+
+    public void checkArticleRepoEmpty() throws BusinessLogicException {
+        if (articleRepository.count() == 0) {
+            throw new BusinessLogicException(StatusCode.ARTICLE_REPO_EMPTY);
         }
     }
 

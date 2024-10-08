@@ -18,7 +18,7 @@ public class TimeUtil {
 
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-      return utcTime.format(formatter);
+      return utcTime.format(formatter) + "UTC+0";
 
     }
 }
