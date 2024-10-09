@@ -15,6 +15,14 @@ import java.util.List;
 import static com.slack.api.model.block.composition.BlockCompositions.plainText;
 
 
+/*
+    추가 구현 사항:
+    Business Exception일 경우에는 메세지 보내지 않고 Internal Server 문제일 때만 메세지 보내기
+
+ */
+
+
+
 @Component
 public class SlackUtil {
 
