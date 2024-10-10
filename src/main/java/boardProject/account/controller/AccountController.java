@@ -26,8 +26,8 @@ public class AccountController {
         return accountService.findAccount(accountId);
     }
 
-    // 아티클 생성
-    @PostMapping
+    // 계정 생성
+    @PostMapping ("/registration")
     @ResponseStatus(HttpStatus.CREATED)
     public Response<Void> signUp (@RequestBody @Valid AccountSignUpDto accountSignUpDto) {
       return accountService.createAccount(accountSignUpDto);
@@ -41,7 +41,15 @@ public class AccountController {
       return accountService.updateAccount(accountId,accountPatchDto);
     }
 
-    // 아티클 삭제
+    @PatchMapping ("info/")
+    @ResponseStatus(HttpStatus.OK)
+    public Response<Void> patchEmail (@Positive @PathVariable ("account-id") Long accountId,
+                                        @RequestBody AccountPatchDto accountPatchDto) throws Exception {
+        return accountService.updateAccount(accountId,accountPatchDto);
+    }
+
+
+
     @DeleteMapping ("/{account-id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Response<Void> deleteAccount (@Positive @PathVariable ("account-id") Long accountId) {

@@ -10,7 +10,7 @@ import boardProject.account.response.SingleAccountResponse;
 import boardProject.global.exception.BusinessLogicException;
 import boardProject.global.exception.StatusCode;
 import boardProject.global.response.Response;
-import jakarta.validation.Valid;
+import boardProject.util.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +38,7 @@ public class AccountService {
 
     }
 
-    public Response<Void> createAccount(@Valid AccountSignUpDto accountSignUpDto) {
+    public Response<Void> createAccount(AccountSignUpDto accountSignUpDto) {
 
 
         Account accountInfo = mapper.accountSignUpDtoToAccount(accountSignUpDto);
@@ -48,7 +48,10 @@ public class AccountService {
                 Account.builder().name(accountInfo.getName())
                                  .residentNum(accountInfo.getResidentNum())
                                  .birthDay(getBirthdayFromResidentNum(accountInfo.getResidentNum()))
-                                 .age(getAgeFromBirthday(getBirthdayFromResidentNum(accountInfo.getResidentNum())))
+                                 .age(getAgeFromBirthday(
+                                         getBirthdayFromResidentNum(accountInfo.getResidentNum())
+                                         )
+                                 )
                                  .phoneNum(accountInfo.getPhoneNum())
                                  .nickname(accountInfo.getNickname())
                                  .email(accountInfo.getEmail())
@@ -71,11 +74,27 @@ public class AccountService {
                                                        () -> new BusinessLogicException(StatusCode.ACCOUNT_NOT_EXIST)
                                                );
 
-        Account accountInfo = mapper.accountPatchDtoToAccount(accountPatchDto);
 
-        accountInDb.updateAccount(accountInfo.getEmail(),accountInfo.getPassword(),accountInfo.getPhoneNum(),accountInfo.getNickname());
+        if(accountPatchDto.getName() != null) {
+            accountInDb.updateName(accountPatchDto.getName());
+        }
+        if (accountPatchDto.getNickname() != null) {
+            accountInDb.updateNickname(accountPatchDto.getNickname());
+        }
+        if (accountPatchDto.getEmail() != null) {
+            accountInDb.updateEmail(accountPatchDto.getEmail());
+        }
+        if (accountPatchDto.getPhoneNum() != null) {
+            accountInDb.updatePhoneNum(accountPatchDto.getPhoneNum());
+        }
+        if (accountPatchDto.getPassword() != null) {
+            accountInDb.updatePassword(accountPatchDto.getPassword());
+        }
+
+
 
         accountRepository.save(accountInDb);
+
 
         return new Response<>(StatusCode.UPDATE_SUCCESS, null);
 
@@ -101,9 +120,9 @@ public class AccountService {
     public String getBirthdayFromResidentNum (String residentNum) {
 
         String birthday = "";
-        String monthAndDay = residentNum.substring(2,5);
+        String monthAndDay = residentNum.substring(0,6);
 
-        if( Year.now().getValue()  <= Integer.valueOf(residentNum.substring(0,1))) {
+        if( Year.now().getValue() - 2000  <= Integer.valueOf(residentNum.substring(0,2))) {
             birthday = "19" + monthAndDay;
         }
         else {
@@ -113,10 +132,13 @@ public class AccountService {
         return birthday;
 
     }
-
     public int getAgeFromBirthday (String birthday) {
 
-        return Year.now().getValue() - Integer.valueOf(birthday.substring(0,3));
+        if (TimeUtil.isTodayMonthDayAfter(birthday)) { //생일 지남
+            return Year.now().getValue() - Integer.valueOf(birthday.substring(0,4));
+        } else {
+            return Year.now().getValue() - Integer.valueOf(birthday.substring(0,4))-1;
+        }
     }
 
 

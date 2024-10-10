@@ -26,10 +26,11 @@ public class Article extends BaseEntity {
     @NotNull
     private String body;
 
-    public void updateArticle (String title, String body) {
+    public void updateTitle(String title) {
         this.title = title;
-        this.body = body;
     }
 
-
+    public void updateBody(String body) {
+        this.body = body;
+    }
 }

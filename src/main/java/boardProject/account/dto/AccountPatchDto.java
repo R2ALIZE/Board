@@ -11,7 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AccountPatchDto {
 
+    private String name;
+
     private String phoneNum;
+
+    private String nickname;
 
     private String email;
 

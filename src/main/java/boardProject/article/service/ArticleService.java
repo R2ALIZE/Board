@@ -81,9 +81,23 @@ public class ArticleService {
                                                        () -> new BusinessLogicException(StatusCode.ARTICLE_NOT_EXIST)
                                                );
 
-        Article articleinfo = mapper.ArticlePostDtoToArticle(articleRequestDto);
 
-        articleInDb.updateArticle(articleinfo.getTitle(),articleinfo.getBody());
+        if (articleRequestDto.getTitle() != null) {
+            articleInDb.updateTitle(articleRequestDto.getTitle());
+        }
+        if (articleRequestDto.getBody() != null) {
+            articleInDb.updateBody(articleRequestDto.getBody());
+        }
+
+        articleRepository.save(articleInDb);
+
+
+
+
+
+
+
+
 
         articleRepository.save(articleInDb);
 

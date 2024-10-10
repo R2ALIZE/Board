@@ -12,7 +12,7 @@ import java.util.Date;
 @Entity
 @Table(name = "account")
 @Getter // dto - entity 간의 매핑 과정에서 mapper가 getter를 통해 접근
-@Builder
+@Builder (toBuilder = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // Proxy를 이용한 지연로딩
 @AllArgsConstructor
 public class Account extends BaseEntity {
@@ -20,8 +20,6 @@ public class Account extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-
 
     @Column
     @NotNull
@@ -56,11 +54,23 @@ public class Account extends BaseEntity {
     private String nickname;
 
 
+    public void updateName(String name) {
+        this.name = name;
+    }
 
-    public void updateAccount(String email, String password, String nickname, String phoneNum) {
+    public void updateEmail(String email) {
         this.email = email;
+    }
+
+    public void updatePassword(String password) {
         this.password = password;
-        this.nickname = nickname;
+    }
+
+    public void updatePhoneNum(String phoneNum) {
         this.phoneNum = phoneNum;
+    }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
     }
 }
