@@ -1,13 +1,10 @@
 package boardProject.account.entity;
 
+
 import boardProject.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-
-import java.time.LocalDate;
-import java.time.Year;
-import java.util.Date;
 
 @Entity
 @Table(name = "account")
@@ -27,7 +24,7 @@ public class Account extends BaseEntity {
 
     @Column
     @NotNull
-    private String  birthDay;
+    private String birthday;
 
     @Column
     @NotNull
@@ -52,7 +49,6 @@ public class Account extends BaseEntity {
     @Column
     @NotNull
     private String nickname;
-
 
     public void updateName(String name) {
         this.name = name;

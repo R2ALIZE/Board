@@ -1,5 +1,6 @@
 package boardProject.article.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArticleRequestDto {
+public class ArticlePostDto {
 
     @NotBlank (message = "제목은 5자 이상 50자 이내여야 합니다.")
     @Pattern(regexp = "^[가-힣a-zA-Z0-9!@#\\$%\\^&\\*\\(\\)_\\+\\-=\\[\\]\\{\\};:'\",.<>\\/?~`|\\\\]{5,50}$",

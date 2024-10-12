@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 import java.io.IOException;
 
@@ -29,8 +30,6 @@ public class GlobalExceptionHandler {
 
         log.warn("handleBusinessLogicException : {}",be.getMessage());
 
-        slackUtil.sendAlert(be,req);
-
         return new Response<>(ErrorResponse.of(be.getStatusCode()));
     }
 
@@ -45,6 +44,15 @@ public class GlobalExceptionHandler {
 
         return new Response<>(ErrorResponse.of(me.getBindingResult()));
 
+    }
+
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response<ErrorResponse> handleMethodValidationException (HandlerMethodValidationException he) {
+
+        log.warn("handleMethodValidationException : {}", he.getMessage());
+
+        return new Response<>(ErrorResponse.of(StatusCode.INVALID_REQUEST));
     }
 
 

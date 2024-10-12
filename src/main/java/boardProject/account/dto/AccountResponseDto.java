@@ -13,9 +13,17 @@ import java.time.LocalDateTime;
 @Builder
 public class AccountResponseDto {
 
-    private String title;
+    private Long id;
 
-    private String body;
+    private String name;
+
+    private String nickname;
+
+    private int age;
+
+    private String birthday;
+
+    private String phoneNum;
 
     private LocalDateTime createdAt;
 

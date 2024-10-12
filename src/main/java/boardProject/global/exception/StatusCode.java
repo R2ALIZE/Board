@@ -22,6 +22,8 @@ public enum StatusCode {
 
     // Error Code ---------------------------------------------------------------
 
+    INVALID_REQUEST(400,"E004", "INVAILD REQUEST! PLEASE CHECK HTTP REQUEST BODY"),
+
 
     //// Article
     ARTICLE_NOT_EXIST(404,"E001","REQUESTED ARTICLE NOT EXIST IN DB"),

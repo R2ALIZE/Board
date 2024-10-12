@@ -1,7 +1,8 @@
 package boardProject.article.service;
 
 import boardProject.article.dto.ArticleMultiResponseDto;
-import boardProject.article.dto.ArticleRequestDto;
+import boardProject.article.dto.ArticlePatchDto;
+import boardProject.article.dto.ArticlePostDto;
 import boardProject.article.dto.ArticleResponseDto;
 import boardProject.article.entity.Article;
 import boardProject.article.mapper.ArticleMapper;
@@ -59,11 +60,11 @@ public class ArticleService {
         return new Response<>(StatusCode.SELECT_SUCCESS,MultiArticleResponse.of(multiResponseDtos,pageInfo));
 
     }
-    public Response<Void> createArticle(ArticleRequestDto articleRequestDto) {
+    public Response<Void> createArticle(ArticlePostDto articlePostDto) {
 
         Article article = Article.builder()
-                                            .title(articleRequestDto.getTitle())
-                                            .body(articleRequestDto.getBody())
+                                            .title(articlePostDto.getTitle())
+                                            .body(articlePostDto.getBody())
                                             .build();
 
         articleRepository.save(article);
@@ -72,7 +73,7 @@ public class ArticleService {
 
     }
 
-    public Response<Void> updateArticle(Long articleId, ArticleRequestDto articleRequestDto)
+    public Response<Void> updateArticle(Long articleId, ArticlePatchDto articlePatchDto)
                                                                 throws BusinessLogicException {
 
 
@@ -82,22 +83,12 @@ public class ArticleService {
                                                );
 
 
-        if (articleRequestDto.getTitle() != null) {
-            articleInDb.updateTitle(articleRequestDto.getTitle());
+        if (articlePatchDto.getTitle() != null) {
+            articleInDb.updateTitle(articlePatchDto.getTitle());
         }
-        if (articleRequestDto.getBody() != null) {
-            articleInDb.updateBody(articleRequestDto.getBody());
+        if (articlePatchDto.getBody() != null) {
+            articleInDb.updateBody(articlePatchDto.getBody());
         }
-
-        articleRepository.save(articleInDb);
-
-
-
-
-
-
-
-
 
         articleRepository.save(articleInDb);
 

@@ -1,8 +1,7 @@
 package boardProject.article.controller;
 
-import boardProject.article.dto.ArticleMultiResponseDto;
-import boardProject.article.dto.ArticleRequestDto;
-import boardProject.article.dto.ArticleResponseDto;
+import boardProject.article.dto.ArticlePatchDto;
+import boardProject.article.dto.ArticlePostDto;
 import boardProject.article.response.MultiArticleResponse;
 import boardProject.article.response.SingleArticleResponse;
 import boardProject.article.service.ArticleService;
@@ -11,11 +10,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/article")
@@ -44,16 +39,16 @@ public class ArticleController {
     // 아티클 생성
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Response<Void> postArticle (@RequestBody @Valid ArticleRequestDto articleRequestDto) {
-      return articleService.createArticle(articleRequestDto);
+    public Response<Void> postArticle (@RequestBody @Valid ArticlePostDto articlePostDto) {
+      return articleService.createArticle(articlePostDto);
     }
 
     // 아티클 수정
     @PatchMapping ("/{article-id}")
     @ResponseStatus(HttpStatus.OK)
     public Response<Void> patchArticle (@Positive @PathVariable ("article-id") Long articleId,
-                                        @RequestBody ArticleRequestDto articleRequestDto) throws Exception {
-      return articleService.updateArticle(articleId,articleRequestDto);
+                                        @RequestBody @Valid ArticlePatchDto articlePatchDto) throws Exception {
+      return articleService.updateArticle(articleId,articlePatchDto);
     }
 
     // 아티클 삭제

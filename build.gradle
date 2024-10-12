@@ -30,8 +30,8 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 
 	//Mapstruct
-	implementation 'org.mapstruct:mapstruct:1.5.3.Final'
-	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+	implementation 'org.mapstruct:mapstruct:1.6.2'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.2'
 
 	// MySQL
 	implementation 'mysql:mysql-connector-java:8.0.28'
@@ -51,10 +51,22 @@ dependencies {
 	implementation 'com.slack.api:slack-api-model:1.28.0'
 
 
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+task cleanGenerated(type: Delete) {
+	delete 'generated'
+}
+
+task run(dependsOn: cleanGenerated) {
+	doFirst {
+		// 프로그램 실행 전에 'generated' 폴더를 삭제
+		cleanGenerated.execute()
+	}
 }
