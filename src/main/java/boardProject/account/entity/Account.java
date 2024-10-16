@@ -35,7 +35,6 @@ public class Account extends BaseEntity {
     private String email;
 
     @Column
-    @NotNull
     private String password;
 
     @Column
@@ -50,23 +49,8 @@ public class Account extends BaseEntity {
     @NotNull
     private String nickname;
 
-    public void updateName(String name) {
-        this.name = name;
-    }
 
-    public void updateEmail(String email) {
-        this.email = email;
-    }
+    @Column
+    private String description;
 
-    public void updatePassword(String password) {
-        this.password = password;
-    }
-
-    public void updatePhoneNum(String phoneNum) {
-        this.phoneNum = phoneNum;
-    }
-
-    public void updateNickname(String nickname) {
-        this.nickname = nickname;
-    }
 }

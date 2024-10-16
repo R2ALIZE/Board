@@ -37,7 +37,6 @@ public class AccountService {
 
     public Response<Void> createAccount(AccountSignUpDto accountSignUpDto) {
 
-
         Account accountInfo = mapper.accountSignUpDtoToAccount(accountSignUpDto);
 
         Account account = helper.AccountBuilder(accountInfo);
@@ -48,12 +47,13 @@ public class AccountService {
 
     }
 
-    public Response<Void> updateAccount(Long accountId, AccountPatchDto accountPatchDto) throws BusinessLogicException {
+    public Response<Void> updateAccount(Long accountId, AccountPatchDto patchDto) throws BusinessLogicException {
 
+       Account existingAccount = helper.findSpecificArticleById(accountId);
 
-       Account accountInDb = helper.findSpecificArticleById(accountId);
+       Account updatedAccount =  helper.updateAccountFromDto(patchDto,existingAccount);
 
-       helper.updateAccountFromDto(accountPatchDto,accountInDb);
+       accountRepository.save(updatedAccount);
 
        return new Response<>(StatusCode.UPDATE_SUCCESS, null);
 

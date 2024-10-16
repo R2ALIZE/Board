@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/account")
+@RequestMapping("/account")
 public class AccountController {
 
     @Autowired
@@ -34,21 +34,12 @@ public class AccountController {
     }
 
     // 아티클 수정
-    @PatchMapping ("/{account-id}")
+    @PatchMapping ("/info/modification/{account-id}")
     @ResponseStatus(HttpStatus.OK)
     public Response<Void> patchAccount (@Positive @PathVariable ("account-id") Long accountId,
-                                        @RequestBody AccountPatchDto accountPatchDto) throws Exception {
-      return accountService.updateAccount(accountId,accountPatchDto);
+                                        @RequestBody AccountPatchDto patchDto) throws Exception {
+      return accountService.updateAccount(accountId,patchDto);
     }
-
-    @PatchMapping ("info/")
-    @ResponseStatus(HttpStatus.OK)
-    public Response<Void> patchEmail (@Positive @PathVariable ("account-id") Long accountId,
-                                        @RequestBody AccountPatchDto accountPatchDto) throws Exception {
-        return accountService.updateAccount(accountId,accountPatchDto);
-    }
-
-
 
     @DeleteMapping ("/{account-id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
