@@ -1,7 +1,7 @@
 package boardProject.global.exception;
 
 import boardProject.global.response.Response;
-import boardProject.util.SlackUtil;
+import boardProject.global.util.SlackUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
 
         log.warn("handleMethodValidationException : {}", he.getMessage());
 
-        return new Response<>(ErrorResponse.of(StatusCode.INVALID_REQUEST));
+        return new Response<>(ErrorResponse.of(he));
     }
 
 
@@ -61,7 +61,7 @@ public class GlobalExceptionHandler {
     public Response<ErrorResponse> handleAllException
             (Exception e, HttpServletRequest req) throws IOException {
 
-        log.warn("handleException : {}", e.getMessage());
+        log.warn("handleException : {}, cause : {}", e.getMessage(), e.getCause());
 
         slackUtil.sendAlert(e,req);
 

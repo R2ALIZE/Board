@@ -1,7 +1,7 @@
 package boardProject.article;
 
-import boardProject.article.controller.ArticleController;
-import boardProject.article.service.ArticleService;
+import boardProject.domain.article.controller.ArticleController;
+import boardProject.domain.article.service.ArticleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

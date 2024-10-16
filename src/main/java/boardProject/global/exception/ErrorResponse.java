@@ -1,6 +1,6 @@
 package boardProject.global.exception;
 
-import boardProject.util.TimeUtil;
+import boardProject.global.util.TimeUtil;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -41,13 +41,10 @@ public class ErrorResponse {
         this.resultMessage = e.toString();
     }
 
-
-
-
-
     ErrorResponse (List<RequestFieldError> fieldErrors ) {
         this.validationErrors = fieldErrors;
     }
+
 
     public static ErrorResponse of (StatusCode code) {
         return new ErrorResponse(code);
@@ -60,6 +57,15 @@ public class ErrorResponse {
     public static ErrorResponse of (Exception e) {
         return new ErrorResponse(e);
     }
+
+
+
+
+
+
+
+
+
 
 
 
