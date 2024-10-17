@@ -22,7 +22,7 @@ public enum StatusCode {
 
     // Error Code ---------------------------------------------------------------
 
-    INVALID_REQUEST(400,"E004", "INVAILD REQUEST! PLEASE CHECK HTTP REQUEST BODY"),
+    INVALID_REQUEST(400,"E004", "INVALID REQUEST! PLEASE CHECK HTTP REQUEST BODY"),
 
 
     //// Article
@@ -39,7 +39,8 @@ public enum StatusCode {
 
 
     //// Comment
-
+    COMMENT_NOT_EXIST(404,"E005","REQUESTED COMMENT NOT EXIST IN DB"),
+    COMMENT_REPO_EMPTY(404,"E006","COMMENT REPOSITORY EMPTY"),
 
 
     //// Auth

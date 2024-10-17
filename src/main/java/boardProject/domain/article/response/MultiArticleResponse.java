@@ -2,7 +2,7 @@ package boardProject.domain.article.response;
 
 import boardProject.domain.article.dto.ArticleMultiResponseDto;
 import boardProject.domain.article.entity.Article;
-import boardProject.domain.article.pagination.PageInfo;
+import boardProject.domain.article.pagination.ArticlePageInfo;
 import lombok.Getter;
 import org.springframework.data.domain.Page;
 
@@ -13,12 +13,12 @@ public class MultiArticleResponse {
 
     private List<ArticleMultiResponseDto> articleInfoList;
 
-    private PageInfo pageInfo;
+    private ArticlePageInfo pageInfo;
 
 
     public MultiArticleResponse(List<ArticleMultiResponseDto> multiResponseDto, Page page) {
         this.articleInfoList = multiResponseDto;
-        this.pageInfo = new PageInfo(page.getNumber()+1, page.getTotalPages());
+        this.pageInfo = new ArticlePageInfo(page.getNumber()+1, page.getTotalPages());
     }
 
 

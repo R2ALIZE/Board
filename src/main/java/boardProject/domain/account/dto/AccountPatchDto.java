@@ -2,7 +2,6 @@ package boardProject.domain.account.dto;
 
 import boardProject.global.constant.Constants;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -17,18 +16,21 @@ import lombok.NoArgsConstructor;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY) //Jackson의 private 필드에 대한 접근 허용
 public class AccountPatchDto {
 
-    //@Size (min = 2, max = 5)
+    @Size (min = 2, max = 5)
     private String name ;
 
-    //@Pattern(regexp = "010-(\\d{4})-(\\d{4})")
+    @Pattern(regexp = "010-(\\d{4})-(\\d{4})")
     private String phoneNum ;
 
-    //@Size (min = 2, max = 8)
+    @Size (min = 2, max = 8)
     private String nickname ;
+
 
     private String description ;
 
+    
     private String email ;
+
 
     private String password;
 

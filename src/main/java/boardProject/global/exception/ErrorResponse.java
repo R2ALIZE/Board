@@ -36,15 +36,14 @@ public class ErrorResponse {
     }
 
     ErrorResponse(final Exception e) {
-        this.status = 500;
-        this.divisionCode = "E999";
-        this.resultMessage = e.toString();
+        this.status = ((BusinessLogicException)e).getStatusCode().getStatus() ;
+        this.divisionCode = ((BusinessLogicException)e).getStatusCode().getDivisionCode();
+        this.resultMessage = ((BusinessLogicException)e).getStatusCode().getMessage();
     }
 
     ErrorResponse (List<RequestFieldError> fieldErrors ) {
         this.validationErrors = fieldErrors;
     }
-
 
     public static ErrorResponse of (StatusCode code) {
         return new ErrorResponse(code);
@@ -53,7 +52,6 @@ public class ErrorResponse {
     public static ErrorResponse of (BindingResult bindingResult) {
         return new ErrorResponse(RequestFieldError.of(bindingResult));
     }
-
     public static ErrorResponse of (Exception e) {
         return new ErrorResponse(e);
     }

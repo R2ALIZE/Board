@@ -23,7 +23,7 @@ public class ArticleController {
     @GetMapping ("/{article-id}")
     @ResponseStatus(HttpStatus.OK)
     public Response<SingleArticleResponse> getArticle
-    (@Positive @PathVariable(name = "article-id") Long articleId) throws Exception {
+    (@Positive @PathVariable(name = "article-id") Long articleId) {
         return articleService.findArticle(articleId);
     }
 
