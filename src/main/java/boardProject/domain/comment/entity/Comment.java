@@ -1,5 +1,7 @@
 package boardProject.domain.comment.entity;
 
+import boardProject.domain.account.entity.Account;
+import boardProject.domain.article.entity.Article;
 import boardProject.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -25,5 +27,21 @@ public class Comment extends BaseEntity {
     @Column
     @NotNull
     private String body;
+
+
+
+
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    private Account account;
+
+
+    @ManyToOne
+    @JoinColumn(name = "article_id")
+    private Article article;
+
+
+
+
 
 }
