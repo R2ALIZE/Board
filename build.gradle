@@ -50,6 +50,9 @@ dependencies {
 	implementation 'com.slack.api:slack-app-backend:1.28.0'
 	implementation 'com.slack.api:slack-api-model:1.28.0'
 
+	//Spring Security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
