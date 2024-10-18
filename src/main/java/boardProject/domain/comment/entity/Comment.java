@@ -1,6 +1,6 @@
 package boardProject.domain.comment.entity;
 
-import boardProject.domain.account.entity.Account;
+import boardProject.domain.member.entity.Member;
 import boardProject.domain.article.entity.Article;
 import boardProject.global.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -29,11 +29,9 @@ public class Comment extends BaseEntity {
     private String body;
 
 
-
-
     @ManyToOne
-    @JoinColumn(name = "account_id")
-    private Account account;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
 
     @ManyToOne

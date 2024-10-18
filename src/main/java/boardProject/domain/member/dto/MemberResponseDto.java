@@ -1,4 +1,4 @@
-package boardProject.domain.account.dto;
+package boardProject.domain.member.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AccountResponseDto {
+public class MemberResponseDto {
 
     private Long id;
 

@@ -31,7 +31,7 @@ public enum StatusCode {
 
 
 
-    //// Account
+    //// Member
 
     ACCOUNT_NOT_EXIST(404,"E003","REQUESTED ACCOUNT NOT EXIST IN DB"),
 

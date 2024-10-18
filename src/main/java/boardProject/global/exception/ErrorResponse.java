@@ -36,9 +36,9 @@ public class ErrorResponse {
     }
 
     ErrorResponse(final Exception e) {
-        this.status = ((BusinessLogicException)e).getStatusCode().getStatus() ;
-        this.divisionCode = ((BusinessLogicException)e).getStatusCode().getDivisionCode();
-        this.resultMessage = ((BusinessLogicException)e).getStatusCode().getMessage();
+        this.status = 500;
+        this.divisionCode = "E999";
+        this.resultMessage = e.getMessage();
     }
 
     ErrorResponse (List<RequestFieldError> fieldErrors ) {

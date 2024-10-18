@@ -1,4 +1,4 @@
-package boardProject.domain.account.dto;
+package boardProject.domain.member.dto;
 
 import boardProject.global.constant.Constants;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY) //Jackson의 private 필드에 대한 접근 허용
-public class AccountPatchDto {
+public class MemberPatchDto {
 
     @Size (min = 2, max = 5)
     private String name ;

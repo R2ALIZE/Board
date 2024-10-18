@@ -1,6 +1,7 @@
-package boardProject.domain.account.dto;
+package boardProject.domain.member.dto;
 
 
+import boardProject.global.aop.ResidentNumFormat;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccountSignUpDto {
+public class MemberSignUpDto {
 
     @NotNull
     @Size(min = 2, max = 5)
@@ -22,8 +23,9 @@ public class AccountSignUpDto {
     @Size (min = 2, max = 8)
     private String nickname;
 
+    // - 제외하고 13자리로 입력 받음
     @NotNull
-    @Pattern(regexp = "^(\\d{6})-(\\d{7})$")
+    @ResidentNumFormat
     private String residentNum;
 
     @NotNull

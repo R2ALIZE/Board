@@ -1,7 +1,7 @@
 package boardProject.domain.article.entity;
 
-import boardProject.domain.account.entity.Account;
 import boardProject.domain.comment.entity.Comment;
+import boardProject.domain.member.entity.Member;
 import boardProject.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -32,8 +32,8 @@ public class Article extends BaseEntity {
     private String body;
 
     @ManyToOne
-    @JoinColumn(name = "account_id")
-    Account account;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @OneToMany (mappedBy = "article")
     List<Comment> comments = new ArrayList<>();

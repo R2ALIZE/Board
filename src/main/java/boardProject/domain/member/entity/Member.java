@@ -1,4 +1,4 @@
-package boardProject.domain.account.entity;
+package boardProject.domain.member.entity;
 
 
 import boardProject.domain.article.entity.Article;
@@ -12,12 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "account")
+@Table(name = "member")
 @Getter // dto - entity 간의 매핑 과정에서 mapper가 getter를 통해 접근
 @Builder (toBuilder = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // Proxy를 이용한 지연로딩
 @AllArgsConstructor
-public class Account extends BaseEntity {
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +34,11 @@ public class Account extends BaseEntity {
     @Column
     @NotNull
     private int age;
+
+
+    @Column
+    @NotNull
+    private String gender;
 
     @Column
     @NotNull
@@ -59,10 +64,10 @@ public class Account extends BaseEntity {
     private String description;
 
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "member")
     private List<Article> articles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "member")
     private List<Comment> comments = new ArrayList<>();
 
 
