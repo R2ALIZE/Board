@@ -69,9 +69,9 @@ public class ArticleServiceHelper {
 
         List<Field> nonConstantFields = Arrays.stream(fields)
                 .filter(
-                        field -> Modifier.isFinal(field.getModifiers()) == false
+                        field -> !Modifier.isFinal(field.getModifiers())
                 )
-                .collect(Collectors.toList());
+                .toList();
 
 
         Article.ArticleBuilder builder = existingArticle.toBuilder();
@@ -100,23 +100,17 @@ public class ArticleServiceHelper {
                     continue;
                 }
 
-                if (getterResult != null) {
 
-                    if (getterResult.equals(Constants.EXPRESSION_OF_EXPLICIT_NULL)) {
-                        builderMethod.invoke(builder,null);
-                    } else {
-                        builderMethod.invoke(builder,getterResult);
-                    }
-
+                if (getterResult.equals(Constants.EXPRESSION_OF_EXPLICIT_NULL)) {
+                    builderMethod.invoke(builder,null);
+                } else {
+                    builderMethod.invoke(builder,getterResult);
                 }
 
+
             }
-        } catch (NoSuchMethodException nme) {
-            nme.printStackTrace();
-        } catch (InvocationTargetException ite) {
-            ite.printStackTrace();
-        } catch (IllegalAccessException iae) {
-            iae.printStackTrace();
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
         }
         return builder.build();
     }
