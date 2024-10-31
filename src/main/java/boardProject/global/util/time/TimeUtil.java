@@ -1,7 +1,8 @@
-package boardProject.global.util;
+package boardProject.global.util.time;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -11,7 +12,8 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.SimpleFormatter;
 
-@NoArgsConstructor (access = AccessLevel.PRIVATE) //인스턴스화 될 일 없음
+@Component
+@NoArgsConstructor
 public class TimeUtil {
 
 

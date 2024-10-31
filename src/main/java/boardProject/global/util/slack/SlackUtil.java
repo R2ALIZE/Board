@@ -1,11 +1,14 @@
-package boardProject.global.util;
+package boardProject.global.util.slack;
 
+import boardProject.global.util.time.TimeUtil;
 import com.slack.api.Slack;
 import com.slack.api.model.block.Blocks;
 import com.slack.api.model.block.LayoutBlock;
 import com.slack.api.model.block.composition.BlockCompositions;
 import com.slack.api.webhook.WebhookPayloads;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -21,9 +24,8 @@ import static com.slack.api.model.block.composition.BlockCompositions.plainText;
 
  */
 
-
-
 @Component
+@NoArgsConstructor
 public class SlackUtil {
 
     @Value("${slack.webhook.url}")

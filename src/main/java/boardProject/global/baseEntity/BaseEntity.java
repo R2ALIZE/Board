@@ -1,4 +1,4 @@
-package boardProject.global.entity;
+package boardProject.global.baseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
