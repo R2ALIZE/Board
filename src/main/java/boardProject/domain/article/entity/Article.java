@@ -2,7 +2,7 @@ package boardProject.domain.article.entity;
 
 import boardProject.domain.comment.entity.Comment;
 import boardProject.domain.member.entity.Member;
-import boardProject.global.entity.BaseEntity;
+import boardProject.global.baseEntity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;

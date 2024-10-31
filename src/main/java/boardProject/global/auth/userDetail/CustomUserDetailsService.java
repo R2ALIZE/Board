@@ -1,4 +1,4 @@
-package boardProject.global.auth.config.userDetail;
+package boardProject.global.auth.userDetail;
 
 import boardProject.domain.member.entity.Member;
 import boardProject.domain.member.repository.MemberRepository;
