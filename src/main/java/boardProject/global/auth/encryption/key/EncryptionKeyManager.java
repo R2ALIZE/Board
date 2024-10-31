@@ -18,6 +18,8 @@ public interface EncryptionKeyManager {
 
     public char[] getKeyPassword();
 
+    public boolean isKeyLoaded();
+
 
 
 
