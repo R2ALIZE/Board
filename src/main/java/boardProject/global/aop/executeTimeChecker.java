@@ -2,17 +2,26 @@ package boardProject.global.aop;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
-@Aspect // AOP 구현 클래스 명시
-@Component // 클래스를 bean으로 등록
+@Aspect
+@Component
 @Slf4j
 public class executeTimeChecker {
+
+
+    @Value("${aop.enable}")
+    private boolean isEnable;
+
+
 
 
     @Pointcut("execution(* boardProject..*(..))")
@@ -22,6 +31,13 @@ public class executeTimeChecker {
 
     @Around("targetAllMethods()")
     public Object executionTimeCheck (ProceedingJoinPoint pjp) throws Throwable {
+
+
+        if (!isEnable) {
+            return pjp.proceed();
+        }
+
+
 
         String className = pjp.getTarget().getClass().getSimpleName();
         String methodName = pjp.getSignature().getName();
