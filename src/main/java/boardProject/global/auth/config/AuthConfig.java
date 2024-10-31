@@ -14,11 +14,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class AuthConfig {
 
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
-
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
