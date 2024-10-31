@@ -285,6 +285,8 @@ public class Pkcs12KeyStore implements KeyStoreManager {
             ((RsaKey) keySingleton).loadKeyDataFromKeyStore(keyPairFromKeyStore);
             log.info("Success to change RSA keyPair to loaded Key data");
 
+
+            log.info("RSA Keypair Loaded ? : {}",keySingleton.isKeyLoaded());
             log.info("Success to load RSA private key from PKCS12 KeyStore");
         }
 
@@ -297,6 +299,8 @@ public class Pkcs12KeyStore implements KeyStoreManager {
 
             ((HmacKey) keySingleton).loadKeyDataFromKeyStore(hmackeyFromKeyStore);
 
+
+            log.info("Hmac secretkey Loaded ? : {}",keySingleton.isKeyLoaded());
             log.info("Success to load Hmac secretkey from PKCS12 KeyStore");
         }
     }

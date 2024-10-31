@@ -272,6 +272,7 @@ public class JceksKeyStore implements KeyStoreManager {
 
             ((AesKey) keySingleton).loadKeyDataFromKeyStore(aesKeyFromKeyStore);
 
+            log.info("AES secretkey Loaded ? : {}",keySingleton.isKeyLoaded());
             log.info("Success to load AES secretkey to JCEKS KeyStore");
         }
     }
