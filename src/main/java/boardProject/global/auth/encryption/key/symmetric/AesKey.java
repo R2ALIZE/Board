@@ -21,6 +21,8 @@ public class AesKey implements EncryptionKeyManager {
     @Getter
     private SecretKey aesKey;
 
+    private boolean isLoaded = false;
+
     private final KeyProperties keyProperties;
 
 
@@ -36,6 +38,8 @@ public class AesKey implements EncryptionKeyManager {
             keyGenerator.init(keySize);
 
             this.aesKey = keyGenerator.generateKey();
+
+            isLoaded = true;
 
             log.info("Success to create AES key");
 
@@ -59,6 +63,11 @@ public class AesKey implements EncryptionKeyManager {
 
     public char[] getKeyPassword() {
         return keyProperties.getAesKeyPassword();
+    }
+
+
+    public boolean isKeyLoaded() {
+        return aesKey != null;
     }
 
     public void loadKeyDataFromKeyStore(SecretKey keyDataFromKeyStore) {

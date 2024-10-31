@@ -58,6 +58,11 @@ public class HmacKey implements EncryptionKeyManager {
         return keyProperties.getHmacKeyPassword();
     }
 
+    @Override
+    public boolean isKeyLoaded() {
+        return hmacKey != null;
+    }
+
     public void loadKeyDataFromKeyStore(SecretKey keyDataFromKeyStore) {
         this.hmacKey = keyDataFromKeyStore ;
     }

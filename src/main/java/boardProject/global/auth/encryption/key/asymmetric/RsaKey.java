@@ -78,6 +78,11 @@ public class RsaKey implements EncryptionKeyManager {
         return keyProperties.getRsaKeyPassword();
     }
 
+    @Override
+    public boolean isKeyLoaded() {
+        return rsaKey != null;
+    }
+
     public PublicKey getPublicKey() {
         return rsaKey.getPublic();
     }
