@@ -45,6 +45,13 @@ public enum StatusCode {
 
     //// Auth
 
+    HASHING_STRATEGY_NOT_SET (500,"E015","HASHING STRATEGY NOT SET"),
+
+    ENCRYPTION_STRATEGY_NOT_SET(500,"E016","ENCRYPTION STRATEGY NOT SET"),
+
+
+
+
     KEY_GENERATE_FAIL (500,"E011","FAIL TO GENERATE KEY"),
 
     KEY_TYPE_NOT_FOUND (500, "E013"," INVALID KEY TYPE"),
@@ -54,6 +61,16 @@ public enum StatusCode {
     KEY_SAVED_WRONG_KEYSTORE(500,
                                 "E012",
                                 "SYMMETRIC KEY -> JCEKS, OTHERS -> PKCS12"),
+
+    KEY_NOT_LOADED(500,"E014","KEY NOT LOADED ON MEMORY"),
+
+
+
+
+
+
+
+
 
     KEYSTORE_NOT_EXIST (404, "E008", "KEYSTORE NOT EXIST"),
 
