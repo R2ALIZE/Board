@@ -10,7 +10,7 @@ import boardProject.domain.member.response.SingleMemberResponse;
 import boardProject.global.constant.Constants;
 import boardProject.global.exception.BusinessLogicException;
 import boardProject.global.exception.StatusCode;
-import boardProject.global.util.TimeUtil;
+import boardProject.global.util.time.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;

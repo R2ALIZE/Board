@@ -1,6 +1,6 @@
 package boardProject.global.exception;
 
-import boardProject.global.util.TimeUtil;
+import boardProject.global.util.time.TimeUtil;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
 import lombok.Getter;

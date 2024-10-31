@@ -1,7 +1,7 @@
 package boardProject.global.exception;
 
 import boardProject.global.response.Response;
-import boardProject.global.util.SlackUtil;
+import boardProject.global.util.slack.SlackUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,11 +18,10 @@ import java.io.IOException;
 
 @Slf4j
 @RestControllerAdvice
-@RequiredArgsConstructor
 public class GlobalExceptionHandler {
 
     @Autowired
-    private final SlackUtil slackUtil;
+    private SlackUtil slackUtil;
 
     @ExceptionHandler(BusinessLogicException.class)
     public Response<ErrorResponse> handleBusinessLogicException

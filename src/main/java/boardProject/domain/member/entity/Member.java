@@ -3,7 +3,7 @@ package boardProject.domain.member.entity;
 
 import boardProject.domain.article.entity.Article;
 import boardProject.domain.comment.entity.Comment;
-import boardProject.global.entity.BaseEntity;
+import boardProject.global.baseEntity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
