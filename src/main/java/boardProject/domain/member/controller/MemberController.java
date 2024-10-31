@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
+
 @RestController
 @RequestMapping("/member")
 public class MemberController {
@@ -29,7 +32,8 @@ public class MemberController {
     // 계정 생성
     @PostMapping ("/registration")
     @ResponseStatus(HttpStatus.CREATED)
-    public Response<Void> signUp (@RequestBody @Valid MemberSignUpDto memberSignUpDto) {
+    public Response<Void> signUp (@RequestBody @Valid MemberSignUpDto memberSignUpDto)
+            throws GeneralSecurityException, UnsupportedEncodingException {
       return memberService.createMember(memberSignUpDto);
     }
 

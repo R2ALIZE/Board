@@ -4,14 +4,15 @@ import boardProject.domain.member.dto.MemberPatchDto;
 import boardProject.domain.member.dto.MemberResponseDto;
 import boardProject.domain.member.dto.MemberSignUpDto;
 import boardProject.domain.member.entity.Member;
-import boardProject.domain.member.mapper.MemberMapper;
-import boardProject.domain.member.repository.MemberRepository;
 import boardProject.domain.member.response.SingleMemberResponse;
-import boardProject.global.exception.BusinessLogicException;
 import boardProject.global.exception.StatusCode;
 import boardProject.global.response.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
+import java.security.GeneralSecurityException;
 
 @Service
 public class MemberService {
@@ -32,7 +33,8 @@ public class MemberService {
 
     }
 
-    public Response<Void> createMember(MemberSignUpDto memberSignUpDto) {
+    public Response<Void> createMember(MemberSignUpDto memberSignUpDto)
+            throws GeneralSecurityException, UnsupportedEncodingException {
 
         Member memberInfo = helper.convertToMember(memberSignUpDto);
 
@@ -44,7 +46,8 @@ public class MemberService {
 
     }
 
-    public Response<Void> updateMember(Long memberId, MemberPatchDto patchDto) {
+    public Response<Void> updateMember(Long memberId, MemberPatchDto patchDto)
+            throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
 
        Member existingMember = helper.findSpecificArticleById(memberId);
 
