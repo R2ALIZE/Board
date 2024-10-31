@@ -7,30 +7,39 @@ import boardProject.domain.member.entity.Member;
 import boardProject.domain.member.mapper.MemberMapper;
 import boardProject.domain.member.repository.MemberRepository;
 import boardProject.domain.member.response.SingleMemberResponse;
+import boardProject.global.auth.encryption.context.EncryptionContext;
+import boardProject.global.auth.encryption.context.HashingContext;
+import boardProject.global.auth.encryption.handler.AesEncyption;
+import boardProject.global.auth.encryption.handler.BcryptHashing;
+import boardProject.global.auth.encryption.key.factory.EncryptionKeyFactory;
+import boardProject.global.auth.encryption.key.symmetric.AesKey;
 import boardProject.global.constant.Constants;
 import boardProject.global.exception.BusinessLogicException;
 import boardProject.global.exception.StatusCode;
 import boardProject.global.util.time.TimeUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.security.GeneralSecurityException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.time.Year;
 
+@Slf4j
 @Component
+@RequiredArgsConstructor
 public class MemberServiceHelper {
 
-    @Autowired
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final MemberMapper mapper;
 
-    @Autowired
-    private MemberMapper mapper;
+    private final EncryptionKeyFactory keyFactory;
 
 
     /** DB 접근 메서드 **/
@@ -74,10 +83,11 @@ public class MemberServiceHelper {
 
     /** 생성 메서드 **/
 
-    public Member memberBuilder(Member memberInfo) {
+    public Member memberBuilder(Member memberInfo)
+            throws GeneralSecurityException, UnsupportedEncodingException {
         return
                 Member.builder().name(memberInfo.getName())
-                        .residentNum(addDashResidentNum(memberInfo.getResidentNum()))
+                        .residentNum(processResidentNum(memberInfo.getResidentNum()))
                         .birthday(getBirthdayFromResidentNum(memberInfo.getResidentNum()))
                         .age(getAgeFromBirthday(
                                         getBirthdayFromResidentNum(memberInfo.getResidentNum())
@@ -87,7 +97,7 @@ public class MemberServiceHelper {
                         .phoneNum(memberInfo.getPhoneNum())
                         .nickname(memberInfo.getNickname())
                         .email(memberInfo.getEmail())
-                        .password(passwordEncoder.encode(memberInfo.getPassword()))
+                        .password(processPassword(memberInfo.getPassword()))
                         .build();
     }
 
@@ -95,7 +105,7 @@ public class MemberServiceHelper {
     /** 검증 메서드 **/
 
     public void checkMemberExistOrThrow(Long memberId) throws BusinessLogicException {
-        if (memberRepository.existsById(memberId) == false) {
+        if (!memberRepository.existsById(memberId)) {
             throw new BusinessLogicException(StatusCode.ARTICLE_NOT_EXIST);
         }
     }
@@ -152,57 +162,70 @@ public class MemberServiceHelper {
     }
 
 
+    public String processPassword (String password)
+            throws NoSuchAlgorithmException, InvalidKeyException {
+
+        HashingContext hashingContext = new HashingContext(new BcryptHashing());
+
+        return hashingContext.generateHash(password);
+
+    }
+
+
+    public String processResidentNum (String residentNum)
+            throws GeneralSecurityException, UnsupportedEncodingException {
+
+        String addDash = addDashResidentNum(residentNum);
+
+        AesKey aesKey = (AesKey) keyFactory.selectKey("AES");
+
+        EncryptionContext encryptionContext = new EncryptionContext(new AesEncyption(aesKey));
+
+        return encryptionContext.encrypt(addDash);
+    }
 
 
 
 
-    public Member updateMemberFromDto (MemberPatchDto patchDto, Member existingMember) {
+    public Member updateMemberFromDto (MemberPatchDto patchDto, Member existingMember)
+            throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
 
         Field[] fields = MemberPatchDto.class.getDeclaredFields();
 
         Member.MemberBuilder builder = existingMember.toBuilder();
 
+        for (Field patchDtoField : fields) {
 
-        try {
+            patchDtoField.setAccessible(true);
 
-            for (Field patchDtoField : fields) {
+            String patchDtoFieldName = patchDtoField.getName();
 
-                patchDtoField.setAccessible(true);
-
-                String patchDtoFieldName = patchDtoField.getName();
-
-                String getterMethodName = "get"
-                        + patchDtoFieldName.substring(0, 1).toUpperCase()
-                        + patchDtoFieldName.substring(1, patchDtoFieldName.length());
+            String getterMethodName = "get"
+                    + patchDtoFieldName.substring(0, 1).toUpperCase()
+                    + patchDtoFieldName.substring(1, patchDtoFieldName.length());
 
 
-                Method getterMethodOfDto = MemberPatchDto.class.getMethod(getterMethodName);
-                Method builderMethod = Member.MemberBuilder.class.getMethod(patchDtoFieldName,patchDtoField.getType());
+            Method getterMethodOfDto = MemberPatchDto.class.getMethod(getterMethodName);
+            Method builderMethod = Member.MemberBuilder.class.getMethod(patchDtoFieldName,patchDtoField.getType());
 
-                Object getterResult = getterMethodOfDto.invoke(patchDto);
+            Object getterResult = getterMethodOfDto.invoke(patchDto);
 
-                if (getterResult == null) {
-                    continue;
-                }
+            if (getterResult == null) {
+                continue;
+            }
 
-                if (getterResult != null) {
+            if (getterResult != null) {
 
-                    if (getterResult.equals(Constants.EXPRESSION_OF_EXPLICIT_NULL)) {
-                        builderMethod.invoke(builder,"");
-                    } else {
-                        builderMethod.invoke(builder,getterResult);
-                    }
-
+                if (getterResult.equals(Constants.EXPRESSION_OF_EXPLICIT_NULL)) {
+                    builderMethod.invoke(builder,"");
+                } else {
+                    builderMethod.invoke(builder,getterResult);
                 }
 
             }
-        } catch (NoSuchMethodException nme) {
-            nme.printStackTrace();
-        } catch (InvocationTargetException ite) {
-            ite.printStackTrace();
-        } catch (IllegalAccessException iae) {
-            iae.printStackTrace();
+
         }
+
         return builder.build();
     }
 }
