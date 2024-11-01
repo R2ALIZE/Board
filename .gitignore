@@ -42,6 +42,10 @@ out/
 ### yml ###
 *.yml
 
-### KeyStore file
+### KeyStore file ###
 *.jceks
 *.p12
+
+### log file ###
+*.log
+*.gz
