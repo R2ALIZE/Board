@@ -43,4 +43,5 @@ out/
 *.yml
 
 ### KeyStore file
-*.jks
+*.jceks
+*.p12
