@@ -14,6 +14,11 @@ java {
 }
 
 configurations {
+
+	all{
+		exclude module: 'spring-boot-starter-logging'
+	}
+
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
@@ -60,7 +65,14 @@ dependencies {
 	//Bouncy Castle for RsaCertificate
 	implementation 'org.bouncycastle:bcprov-jdk18on:1.78.1'
 	implementation 'org.bouncycastle:bcpkix-jdk18on:1.78.1'
+
+	// log4j2
+	implementation 'org.springframework.boot:spring-boot-starter-log4j2:3.3.5'
+	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.16.1'
+
 }
+
+
 
 tasks.named('test') {
 	useJUnitPlatform()
