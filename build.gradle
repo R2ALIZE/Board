@@ -15,6 +15,7 @@ java {
 
 configurations {
 
+	// log4j2를 사용하기 위한 기존 Slf4j 모듈인 logback 제거
 	all{
 		exclude module: 'spring-boot-starter-logging'
 	}
@@ -69,6 +70,11 @@ dependencies {
 	// log4j2
 	implementation 'org.springframework.boot:spring-boot-starter-log4j2:3.3.5'
 	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.16.1'
+
+	// jjwt
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
+	runtimeOnly 'io.jsonwebtoken:jjwt-gson:0.12.6'
 
 }
 
