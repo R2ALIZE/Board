@@ -27,6 +27,11 @@
 
 
 
+## 프로젝트 진행 상황
+
+> 📈 [BoardProjcet Kanban](https://github.com/users/R2ALIZE/projects/2/views/1)
+
+
 # 프로젝트 목표
 
 > ✨ 견고한 프로그램을 만들어보자
@@ -38,6 +43,13 @@
     Controller 단 이하의 모든 exception을
     Controller로 되던지고 
     GlobalExceptionHandler 구현하여 처리
+
+
+
+    - 유저 요청에 의한 에러 (BusinessException)
+
+    - 시스템 내부 에러 (InternalLogicException)
+
 
   
 - **유효성 검사**
@@ -80,3 +92,14 @@
 - **테스트 코드**
 
     구현 예정
+
+
+- **개발 환경 구분**
+
+  local - dev - prod
+
+
+- **문서화**
+
+  Gitbook (예정)
+
