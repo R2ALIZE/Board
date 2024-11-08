@@ -2,10 +2,9 @@ package boardProject.global.auth.encryption.key.asymmetric;
 
 import boardProject.global.auth.encryption.key.EncryptionKeyManager;
 import boardProject.global.auth.encryption.key.properties.KeyProperties;
-import boardProject.global.exception.BusinessLogicException;
-import boardProject.global.exception.StatusCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +13,9 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
+import static boardProject.global.logging.LogMarkerFactory.ENCRYPTION;
+
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class RsaKey implements EncryptionKeyManager {
@@ -32,28 +34,39 @@ public class RsaKey implements EncryptionKeyManager {
 
 
 
-    public void generateKey() throws CertificateException, OperatorCreationException {
-        try {
+    public void generateKey()
+            throws CertificateException, OperatorCreationException, NoSuchAlgorithmException {
+
+            log.info(ENCRYPTION,"Attempt to generate RSA keyPair");
 
             String keyAlgorithm = keyProperties.getRsaAlgorithm();
             int keySize = keyProperties.getRsaKeySize();
+
+
 
             KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance(keyAlgorithm);
             keyGenerator.initialize(keySize, new SecureRandom());
 
             this.rsaKey = keyGenerator.generateKeyPair();
 
+            log.info(ENCRYPTION,"Attempt to generate certificate for RSA");
+
             this.certificate
-                    = certificateGenerator.generateRsaCertificate(
-                            rsaKey,
-                    "localhost",
-                    365
+                = certificateGenerator.generateRsaCertificate(
+                rsaKey,
+                "localhost",
+                365
             );
 
-        } catch (NoSuchAlgorithmException e) {
-            throw new BusinessLogicException(StatusCode.KEY_GENERATE_FAIL);
-        }
+            log.info(ENCRYPTION,"Success to generate certificate");
+
+
+            log.info("Success to generate RSA keyPair");
+
+
     }
+
+
 
 
 
