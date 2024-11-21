@@ -50,3 +50,6 @@ out/
 
 ### Manifest file ###
 *.MF
+
+### Mapper Impl file ###
+/src/main/generated/
