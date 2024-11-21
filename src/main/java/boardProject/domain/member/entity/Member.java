@@ -59,15 +59,19 @@ public class Member extends BaseEntity {
     @NotNull
     private String nickname;
 
-
     @Column
     private String description;
 
+    @Column
+    private List<String> roles = new ArrayList<>();
+
 
     @OneToMany(mappedBy = "member")
+    @Builder.Default
     private List<Article> articles = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
+    @Builder.Default
     private List<Comment> comments = new ArrayList<>();
 
 
