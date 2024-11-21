@@ -1,5 +1,6 @@
 HELP.md
 .gradle
+build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
@@ -32,8 +33,6 @@ out/
 /nbdist/
 /.nb-gradle/
 
-
-
 ### VS Code ###
 .vscode/
 
@@ -48,8 +47,6 @@ out/
 *.log
 *.gz
 
-### Generated File ###
-/generated/**
 
-### Manifest File ###
+### Manifest file ###
 *.MF
