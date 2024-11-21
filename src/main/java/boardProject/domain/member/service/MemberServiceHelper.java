@@ -2,20 +2,20 @@ package boardProject.domain.member.service;
 
 import boardProject.domain.member.dto.MemberPatchDto;
 import boardProject.domain.member.dto.MemberResponseDto;
-import boardProject.domain.member.dto.MemberSignUpDto;
 import boardProject.domain.member.entity.Member;
 import boardProject.domain.member.mapper.MemberMapper;
 import boardProject.domain.member.repository.MemberRepository;
 import boardProject.domain.member.response.SingleMemberResponse;
-import boardProject.global.auth.encryption.context.EncryptionContext;
-import boardProject.global.auth.encryption.context.HashingContext;
-import boardProject.global.auth.encryption.handler.AesEncyption;
-import boardProject.global.auth.encryption.handler.BcryptHashing;
-import boardProject.global.auth.encryption.key.factory.EncryptionKeyFactory;
-import boardProject.global.auth.encryption.key.symmetric.AesKey;
+import boardProject.global.auth.dto.SignUpDto;
 import boardProject.global.constant.Constants;
 import boardProject.global.exception.BusinessLogicException;
 import boardProject.global.exception.StatusCode;
+import boardProject.global.security.encryption.context.EncryptionContext;
+import boardProject.global.security.encryption.context.HashingContext;
+import boardProject.global.security.encryption.handler.AesEncyption;
+import boardProject.global.security.encryption.handler.BcryptHashing;
+import boardProject.global.security.encryption.key.factory.EncryptionKeyFactory;
+import boardProject.global.security.encryption.key.symmetric.AesKey;
 import boardProject.global.util.time.TimeUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +29,8 @@ import java.security.GeneralSecurityException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.time.Year;
+import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Component
@@ -42,15 +44,27 @@ public class MemberServiceHelper {
     private final EncryptionKeyFactory keyFactory;
 
 
+
     /** DB 접근 메서드 **/
 
 
-    public Member findSpecificArticleById(Long memberId) throws BusinessLogicException {
+    public Member findSpecificMemberById(Long memberId) throws BusinessLogicException {
         return memberRepository.findById(memberId)
                 .orElseThrow(
-                        () -> new BusinessLogicException(StatusCode.ACCOUNT_NOT_EXIST)
+                        () -> new BusinessLogicException(StatusCode.MEMBER_NOT_EXIST)
                 );
     }
+
+    public Member findSpecificMemberByEmail(String email) throws BusinessLogicException {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(
+                        () -> new BusinessLogicException(StatusCode.MEMBER_NOT_EXIST)
+                );
+    }
+
+
+
+
 
     public void saveMember (Member member) {
         memberRepository.save(member);
@@ -70,7 +84,7 @@ public class MemberServiceHelper {
         return mapper.memberToMemberResponseDto(member);
     }
 
-    public Member convertToMember (MemberSignUpDto signUpDto) {
+    public Member convertToMember (SignUpDto signUpDto) {
         return mapper.memberSignUpDtoToMember(signUpDto);
     }
 
@@ -86,18 +100,20 @@ public class MemberServiceHelper {
     public Member memberBuilder(Member memberInfo)
             throws GeneralSecurityException, UnsupportedEncodingException {
         return
-                Member.builder().name(memberInfo.getName())
-                        .residentNum(processResidentNum(memberInfo.getResidentNum()))
-                        .birthday(getBirthdayFromResidentNum(memberInfo.getResidentNum()))
-                        .age(getAgeFromBirthday(
-                                        getBirthdayFromResidentNum(memberInfo.getResidentNum())
+                Member.builder()
+                                .name(memberInfo.getName())
+                                .residentNum(processResidentNum(memberInfo.getResidentNum()))
+                                .birthday(getBirthdayFromResidentNum(memberInfo.getResidentNum()))
+                                .age(getAgeFromBirthday(
+                                                getBirthdayFromResidentNum(memberInfo.getResidentNum())
+                                        )
                                 )
-                        )
-                        .gender(getGenderFromResidentNum(memberInfo.getResidentNum()))
-                        .phoneNum(memberInfo.getPhoneNum())
-                        .nickname(memberInfo.getNickname())
-                        .email(memberInfo.getEmail())
-                        .password(processPassword(memberInfo.getPassword()))
+                                .gender(getGenderFromResidentNum(memberInfo.getResidentNum()))
+                                .phoneNum(memberInfo.getPhoneNum())
+                                .nickname(memberInfo.getNickname())
+                                .email(memberInfo.getEmail())
+                                .password(processPassword(memberInfo.getPassword()))
+                                .roles(List.of("USER"))
                         .build();
     }
 
@@ -106,7 +122,7 @@ public class MemberServiceHelper {
 
     public void checkMemberExistOrThrow(Long memberId) throws BusinessLogicException {
         if (!memberRepository.existsById(memberId)) {
-            throw new BusinessLogicException(StatusCode.ARTICLE_NOT_EXIST);
+            throw new BusinessLogicException(StatusCode.MEMBER_NOT_EXIST);
         }
     }
 
@@ -116,10 +132,10 @@ public class MemberServiceHelper {
     /** 가공 메서드 **/
     public String getBirthdayFromResidentNum(String residentNum) {
 
-        String birthday = "";
+        String birthday;
         String monthAndDay = residentNum.substring(0, 6);
 
-        if (Year.now().getValue() - 2000 <= Integer.valueOf(residentNum.substring(0, 2))) {
+        if (Year.now().getValue() - 2000 <= Integer.parseInt(residentNum.substring(0, 2))) {
             birthday = "19" + monthAndDay;
         } else {
             birthday = "20" + monthAndDay;
@@ -132,9 +148,9 @@ public class MemberServiceHelper {
     public int getAgeFromBirthday(String birthday) {
 
         if (TimeUtil.isTodayMonthDayAfter(birthday)) { //생일 지남
-            return Year.now().getValue() - Integer.valueOf(birthday.substring(0, 4));
+            return Year.now().getValue() - Integer.parseInt(birthday.substring(0, 4));
         } else {
-            return Year.now().getValue() - Integer.valueOf(birthday.substring(0, 4)) - 1;
+            return Year.now().getValue() - Integer.parseInt(birthday.substring(0, 4)) - 1;
         }
     }
 
@@ -158,7 +174,7 @@ public class MemberServiceHelper {
 
 
     public String addDashResidentNum (String residentNum) {
-        return residentNum.substring(0,6) + "-" + residentNum.substring(6,residentNum.length());
+        return residentNum.substring(0,6) + "-" + residentNum.substring(6);
     }
 
 
@@ -202,7 +218,7 @@ public class MemberServiceHelper {
 
             String getterMethodName = "get"
                     + patchDtoFieldName.substring(0, 1).toUpperCase()
-                    + patchDtoFieldName.substring(1, patchDtoFieldName.length());
+                    + patchDtoFieldName.substring(1);
 
 
             Method getterMethodOfDto = MemberPatchDto.class.getMethod(getterMethodName);
@@ -214,14 +230,10 @@ public class MemberServiceHelper {
                 continue;
             }
 
-            if (getterResult != null) {
-
-                if (getterResult.equals(Constants.EXPRESSION_OF_EXPLICIT_NULL)) {
-                    builderMethod.invoke(builder,"");
-                } else {
-                    builderMethod.invoke(builder,getterResult);
-                }
-
+            if (getterResult.equals(Constants.EXPRESSION_OF_EXPLICIT_NULL)) {
+                builderMethod.invoke(builder, "");
+            } else {
+                builderMethod.invoke(builder, getterResult);
             }
 
         }
