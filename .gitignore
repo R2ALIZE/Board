@@ -6,6 +6,7 @@ build/
 !**/src/test/**/build/
 
 generated/**
+.MF
 
 ### STS ###
 .apt_generated
@@ -48,3 +49,4 @@ out/
 ### log file ###
 *.log
 *.gz
+
