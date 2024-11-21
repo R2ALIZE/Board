@@ -1,4 +1,4 @@
-package boardProject.global.aop;
+package boardProject.global.aop.format;
 
 import boardProject.global.validation.ResidentNumFormatCheck;
 import jakarta.validation.Constraint;
