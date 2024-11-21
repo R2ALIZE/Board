@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 @Service
@@ -57,7 +58,8 @@ public class ArticleService {
 
     }
 
-    public Response<Void> updateArticle(Long articleId, ArticlePatchDto articlePatchDto) {
+    public Response<Void> updateArticle(Long articleId, ArticlePatchDto articlePatchDto)
+            throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
 
         Article existingArticle = helper.findSpecificArticleById(articleId);
 

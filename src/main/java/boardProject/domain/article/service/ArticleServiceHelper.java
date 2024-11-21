@@ -21,8 +21,6 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,55 +61,46 @@ public class ArticleServiceHelper {
     }
 
 
-    public Article updateArticleFromDto (ArticlePatchDto patchDto, Article existingArticle) {
+    public Article updateArticleFromDto (ArticlePatchDto patchDto, Article existingArticle)
+            throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 
         Field[] fields = ArticlePatchDto.class.getDeclaredFields();
-
-        List<Field> nonConstantFields = Arrays.stream(fields)
-                .filter(
-                        field -> !Modifier.isFinal(field.getModifiers())
-                )
-                .toList();
-
 
         Article.ArticleBuilder builder = existingArticle.toBuilder();
 
 
-        try {
 
-            for (Field patchDtoField : nonConstantFields) {
+        for (Field patchDtoField : fields) {
 
-                patchDtoField.setAccessible(true);
+            patchDtoField.setAccessible(true);
 
-                String patchDtoFieldName = patchDtoField.getName();
+            String patchDtoFieldName = patchDtoField.getName();
 
-                String getterMethodName = "get"
-                        + patchDtoFieldName.substring(0, 1).toUpperCase()
-                        + patchDtoFieldName.substring(1, patchDtoFieldName.length());
-
-
-                Method getterMethodOfDto = ArticlePatchDto.class.getMethod(getterMethodName);
-                Method builderMethod = Article.ArticleBuilder.class
-                                              .getMethod(patchDtoFieldName,patchDtoField.getType());
-
-                Object getterResult = getterMethodOfDto.invoke(patchDto);
-
-                if (getterResult == null) {
-                    continue;
-                }
+            String getterMethodName = "get"
+                    + patchDtoFieldName.substring(0, 1).toUpperCase()
+                    + patchDtoFieldName.substring(1);
 
 
-                if (getterResult.equals(Constants.EXPRESSION_OF_EXPLICIT_NULL)) {
-                    builderMethod.invoke(builder,null);
-                } else {
-                    builderMethod.invoke(builder,getterResult);
-                }
+            Method getterMethodOfDto = ArticlePatchDto.class.getMethod(getterMethodName);
+            Method builderMethod = Article.ArticleBuilder.class
+                                          .getMethod(patchDtoFieldName,patchDtoField.getType());
 
+            Object getterResult = getterMethodOfDto.invoke(patchDto);
 
+            if (getterResult == null) {
+                continue;
             }
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-            e.printStackTrace();
+
+
+            if (getterResult.equals(Constants.EXPRESSION_OF_EXPLICIT_NULL)) {
+                builderMethod.invoke(builder, (Object) null);
+            } else {
+                builderMethod.invoke(builder,getterResult);
+            }
+
+
         }
+
         return builder.build();
     }
 
@@ -141,7 +130,7 @@ public class ArticleServiceHelper {
 
 
     public void checkArticleExistOrThrow(Long articleId) throws BusinessLogicException {
-        if(articleRepository.existsById(articleId) == false) {
+        if(!articleRepository.existsById(articleId)) {
             throw new BusinessLogicException(StatusCode.ARTICLE_NOT_EXIST);
         }
     }

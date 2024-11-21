@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.InvocationTargetException;
+
 @RestController
 @RequestMapping(value = "/article")
 public class ArticleController {
@@ -47,7 +49,10 @@ public class ArticleController {
     @PatchMapping ("/{article-id}")
     @ResponseStatus(HttpStatus.OK)
     public Response<Void> patchArticle (@Positive @PathVariable ("article-id") Long articleId,
-                                        @RequestBody @Valid ArticlePatchDto articlePatchDto)  {
+                                        @RequestBody @Valid ArticlePatchDto articlePatchDto)
+
+            throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+
       return articleService.updateArticle(articleId,articlePatchDto);
     }
 

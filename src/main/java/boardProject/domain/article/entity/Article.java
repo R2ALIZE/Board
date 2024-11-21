@@ -36,6 +36,7 @@ public class Article extends BaseEntity {
     private Member member;
 
     @OneToMany (mappedBy = "article")
+    @Builder.Default
     List<Comment> comments = new ArrayList<>();
 
 }

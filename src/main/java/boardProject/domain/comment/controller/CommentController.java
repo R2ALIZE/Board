@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.InvocationTargetException;
+
 @RestController
 @RequestMapping(value = "/comment")
 public class CommentController {
@@ -47,7 +49,10 @@ public class CommentController {
     @PatchMapping ("/{comment-id}")
     @ResponseStatus(HttpStatus.OK)
     public Response<Void> patchComment (@Positive @PathVariable ("comment-id") Long commentId,
-                                        @RequestBody @Valid CommentPatchDto commentPatchDto)  {
+                                        @RequestBody @Valid CommentPatchDto commentPatchDto)
+
+            throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+
         return commentService.updateComment(commentId,commentPatchDto);
     }
 

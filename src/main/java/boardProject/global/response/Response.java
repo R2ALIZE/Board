@@ -1,22 +1,23 @@
 package boardProject.global.response;
 
 
-import boardProject.global.exception.ErrorResponse;
 import boardProject.global.exception.StatusCode;
+import boardProject.global.util.time.TimeUtil;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
-
-import java.util.List;
 
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Response<T>{
 
+    private final String timeStamp = TimeUtil.getNowAsUtcZero();
+
     private StatusCode statusCode;
 
-    private String requestResult;
+    private final String requestResult;
 
-    private T resultDetails;
+    private final T resultDetails;
 
 
 

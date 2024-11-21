@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 @Service
@@ -57,7 +58,8 @@ public class CommentService {
 
     }
 
-    public Response<Void> updateComment (Long commentId, CommentPatchDto commentPatchDto) {
+    public Response<Void> updateComment (Long commentId, CommentPatchDto commentPatchDto)
+            throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
 
         Comment existingComment = helper.findSpecificCommentById(commentId);
 

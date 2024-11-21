@@ -1,21 +1,16 @@
 package boardProject.domain.member.controller;
 
 import boardProject.domain.member.dto.MemberPatchDto;
-import boardProject.domain.member.dto.MemberSignUpDto;
 import boardProject.domain.member.response.SingleMemberResponse;
 import boardProject.domain.member.service.MemberService;
 import boardProject.global.response.Response;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
-
 @RestController
-@RequestMapping("/member")
+@RequestMapping("/member/info")
 public class MemberController {
 
     @Autowired
@@ -29,27 +24,15 @@ public class MemberController {
         return memberService.findMember(memberId);
     }
 
-    // 계정 생성
-    @PostMapping ("/registration")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Response<Void> signUp (@RequestBody @Valid MemberSignUpDto memberSignUpDto)
-            throws GeneralSecurityException, UnsupportedEncodingException {
-      return memberService.createMember(memberSignUpDto);
-    }
 
     // 아티클 수정
-    @PatchMapping ("/info/modification/{member-id}")
+    @PatchMapping ("/modification/{member-id}")
     @ResponseStatus(HttpStatus.OK)
     public Response<Void> patchMember (@Positive @PathVariable ("member-id") Long memberId,
                                         @RequestBody MemberPatchDto patchDto) throws Exception {
       return memberService.updateMember(memberId,patchDto);
     }
 
-    @DeleteMapping ("/{member-id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Response<Void> deleteMember (@Positive @PathVariable ("member-id") Long memberId) {
-       return memberService.removeMember(memberId);
-    }
 
 
 }

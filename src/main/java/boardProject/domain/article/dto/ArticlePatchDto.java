@@ -11,6 +11,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static boardProject.global.constant.Constants.EXPRESSION_OF_EXPLICIT_NULL;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,11 +35,11 @@ public class ArticlePatchDto {
 
     @JsonSetter("title")
     public void updateTitle(String title) {
-        this.title = (title == null) ? Constants.EXPRESSION_OF_EXPLICIT_NULL : title;
+        this.title = (title == null) ? EXPRESSION_OF_EXPLICIT_NULL : title;
     }
 
     @JsonSetter("body")
     public void updateBody(String body) {
-        this.body = (body == null) ? Constants.EXPRESSION_OF_EXPLICIT_NULL : body;
+        this.body = (body == null) ? EXPRESSION_OF_EXPLICIT_NULL : body;
     }
 }

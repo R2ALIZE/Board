@@ -61,54 +61,43 @@ public class CommentServiceHelper {
     }
 
 
-    public Comment updateCommentFromDto (CommentPatchDto patchDto, Comment existingComment) {
+    public Comment updateCommentFromDto (CommentPatchDto patchDto, Comment existingComment)
+            throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 
         Field[] fields = CommentPatchDto.class.getDeclaredFields();
 
         Comment.CommentBuilder builder = existingComment.toBuilder();
 
 
-        try {
+        for (Field patchDtoField : fields) {
 
-            for (Field patchDtoField : fields) {
+            patchDtoField.setAccessible(true);
 
-                patchDtoField.setAccessible(true);
+            String patchDtoFieldName = patchDtoField.getName();
 
-                String patchDtoFieldName = patchDtoField.getName();
-
-                String getterMethodName = "get"
-                        + patchDtoFieldName.substring(0, 1).toUpperCase()
-                        + patchDtoFieldName.substring(1, patchDtoFieldName.length());
+            String getterMethodName = "get"
+                    + patchDtoFieldName.substring(0, 1).toUpperCase()
+                    + patchDtoFieldName.substring(1);
 
 
-                Method getterMethodOfDto = CommentPatchDto.class.getMethod(getterMethodName);
-                Method builderMethod = Comment.CommentBuilder.class
-                                              .getMethod(patchDtoFieldName,patchDtoField.getType());
+            Method getterMethodOfDto = CommentPatchDto.class.getMethod(getterMethodName);
+            Method builderMethod = Comment.CommentBuilder.class
+                                          .getMethod(patchDtoFieldName,patchDtoField.getType());
 
-                Object getterResult = getterMethodOfDto.invoke(patchDto);
+            Object getterResult = getterMethodOfDto.invoke(patchDto);
 
-                if (getterResult == null) {
-                    continue;
-                }
-
-                if (getterResult != null) {
-
-                    if (getterResult.equals(Constants.EXPRESSION_OF_EXPLICIT_NULL)) {
-                        builderMethod.invoke(builder,null);
-                    } else {
-                        builderMethod.invoke(builder,getterResult);
-                    }
-
-                }
-
+            if (getterResult == null) {
+                continue;
             }
-        } catch (NoSuchMethodException nme) {
-            nme.printStackTrace();
-        } catch (InvocationTargetException ite) {
-            ite.printStackTrace();
-        } catch (IllegalAccessException iae) {
-            iae.printStackTrace();
+
+            if (getterResult.equals(Constants.EXPRESSION_OF_EXPLICIT_NULL)) {
+                builderMethod.invoke(builder, (Object) null);
+            } else {
+                builderMethod.invoke(builder, getterResult);
+            }
+
         }
+
         return builder.build();
     }
 
@@ -138,7 +127,7 @@ public class CommentServiceHelper {
 
 
     public void checkCommentExistOrThrow(Long commentId) throws BusinessLogicException {
-        if(commentRepository.existsById(commentId) == false) {
+        if(!commentRepository.existsById(commentId)) {
             throw new BusinessLogicException(StatusCode.COMMENT_NOT_EXIST);
         }
     }
