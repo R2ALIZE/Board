@@ -3,7 +3,7 @@
 
 ## 개요
 
-프로젝트명 : 게시판 with Java Spring
+프로젝트명 : Board_with_various_features
 
 인원 : BE 1명
 
@@ -29,7 +29,7 @@
 
 ## 프로젝트 진행 상황
 
-> 📈 [BoardProjcet Kanban](https://github.com/users/R2ALIZE/projects/2/views/1)
+> 📈 [BoardProject Kanban](https://github.com/users/R2ALIZE/projects/2/views/1)
 
 
 # 프로젝트 목표
