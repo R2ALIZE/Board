@@ -24,7 +24,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
 import java.util.List;
@@ -35,15 +34,13 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig implements WebMvcConfigurer {
+public class SecurityConfig  {
 
     private final JwtTokenService jwtTokenService;
 
     private final MemberServiceHelper memberServiceHelper;
 
     private final MemberRepository memberRepository;
-
-
 
     @Bean
     AuthenticationManager authenticationManager() {
@@ -140,6 +137,8 @@ public class SecurityConfig implements WebMvcConfigurer {
                         .requestMatchers(POST,"/auth/refresh").hasRole("USER")
                         .requestMatchers(POST,"/auth/logout").hasRole("USER")
                         .requestMatchers(POST,"/auth/withdrawal").hasRole("USER")
+                        .requestMatchers(POST,"/auth/email/verification-request").permitAll()
+                        .requestMatchers(POST,"/auth/email/auth-code-verification").permitAll()
 
                         // MEMBER
                         .requestMatchers(GET,"/member/info/{member-id}").hasAnyRole("USER","ADMIN")
@@ -160,8 +159,17 @@ public class SecurityConfig implements WebMvcConfigurer {
                         .anyRequest().authenticated()
 
                 )
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenService,authenticationManager(),memberServiceHelper), UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(new JwtAuthorizationFilter(jwtTokenService,memberServiceHelper), JwtAuthenticationFilter.class)
+                .addFilterBefore(
+                        new JwtAuthenticationFilter(jwtTokenService,
+                                                    authenticationManager(),
+                                                    memberServiceHelper
+                        ),
+                        UsernamePasswordAuthenticationFilter.class
+                )
+                .addFilterAfter(
+                        new JwtAuthorizationFilter(jwtTokenService,memberServiceHelper),
+                        JwtAuthenticationFilter.class
+                )
 
         ;
 

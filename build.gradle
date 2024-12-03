@@ -77,8 +77,13 @@ dependencies {
 	runtimeOnly	'io.jsonwebtoken:jjwt-jackson:0.12.6'
 
 	// Redis
-	implementation 'org.springframework.data:spring-data-redis:3.3.5'
-	implementation 'io.lettuce:lettuce-core:6.5.0.RELEASE'
+	implementation('org.springframework.boot:spring-boot-starter-data-redis') {
+		exclude group: 'org.springframework.data', module: 'spring-data-redis-reactive'
+	}
+	implementation 'io.lettuce:lettuce-core:6.5.1.RELEASE'
+
+	// mail
+	implementation 'org.springframework.boot:spring-boot-starter-mail:3.4.0'
 
 }
 
@@ -88,11 +93,12 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-task cleanGenerated(type: Delete) {
+tasks.register('cleanGenerated', Delete) {
 	delete 'generated'
 }
 
-task run(dependsOn: cleanGenerated) {
+tasks.register('run') {
+	dependsOn cleanGenerated
 	doFirst {
 		// 프로그램 실행 전에 'generated' 폴더를 삭제
 		cleanGenerated.execute()

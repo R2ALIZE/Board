@@ -2,12 +2,12 @@ package boardProject.global.auth.service;
 
 import boardProject.domain.member.entity.Member;
 import boardProject.domain.member.service.MemberServiceHelper;
-import boardProject.global.auth.dto.SignUpDto;
-import boardProject.global.exception.StatusCode;
+import boardProject.global.auth.dto.*;
 import boardProject.global.response.AuthResponse;
 import boardProject.global.response.Response;
 import boardProject.global.security.jwt.JwtTokenService;
 import io.jsonwebtoken.Claims;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
+import java.security.NoSuchAlgorithmException;
 
+import static boardProject.global.exception.StatusCode.*;
 import static boardProject.global.logging.LogMarkerFactory.AUTH;
 
 @Slf4j
@@ -25,12 +27,14 @@ public class AuthService {
 
     private final MemberServiceHelper memberServiceHelper;
 
-    private final JwtTokenService jwtTokenService;
+    private final AuthServiceHelper authServiceHelper;
 
+    private final JwtTokenService jwtTokenService;
 
 
     public Response<AuthResponse> register (SignUpDto signUpDto)
             throws GeneralSecurityException, UnsupportedEncodingException {
+
 
         Member applicantInfo =
                 memberServiceHelper.convertToMember(signUpDto);
@@ -38,15 +42,17 @@ public class AuthService {
         Member applicant =
                 memberServiceHelper.memberBuilder(applicantInfo);
 
+
+        // DB 저장
         memberServiceHelper.saveMember(applicant);
 
-
+        // 응답 생성
         AuthResponse response = AuthResponse.builder()
                                                         .memberId(applicant.getId())
                                                         .request("REGISTRATION")
                                             .build();
 
-        return new Response<>(StatusCode.REGISTRATION_SUCCESS, response);
+        return new Response<>(REGISTRATION_SUCCESS, response);
 
     }
 
@@ -70,7 +76,7 @@ public class AuthService {
                                             .build();
 
 
-        return new Response<>(StatusCode.JWT_REFRESH_SUCCESS,response);
+        return new Response<>(JWT_REFRESH_SUCCESS,response);
     }
 
 
@@ -85,7 +91,7 @@ public class AuthService {
                                                         .request("LOGOUT")
                                             .build();
 
-        return new Response<>(StatusCode.LOGOUT_SUCCESS,response);
+        return new Response<>(LOGOUT_SUCCESS,response);
     }
 
 
@@ -100,8 +106,42 @@ public class AuthService {
                                                             .request("WITHDRAW")
                                                 .build();
 
-        return new Response<>(StatusCode.WITHDRAWAL_SUCCESS,response);
+        return new Response<>(WITHDRAWAL_SUCCESS,response);
     }
+
+
+    public Response<AuthResponse> sendVerificationMail(VerificationMailRequestDto mailDto) 
+                                                        throws MessagingException, NoSuchAlgorithmException {
+
+        String receiver = mailDto.email();
+        VerificationMailResponseDto responseDto = authServiceHelper.sendVerificationMail(receiver);
+
+
+        AuthResponse<Object> response = AuthResponse.builder()
+                                                                .request("SEND VERIFICATION MAIL")
+                                                                .resultDetails(responseDto)
+                                                    .build();
+
+        return new Response<>(VERIFICATION_MAIL_SEND_SUCCESS,response);
+
+    }
+
+    public Response<AuthResponse> verifyAuthCode(AuthCodeRequestDto authCodeDto) {
+
+        String applicantEmail = authCodeDto.email();
+        String inputAuthCode = authCodeDto.authCode();
+
+
+        AuthCodeResponseDto responseDto = authServiceHelper.verifyAuthCode(applicantEmail,inputAuthCode);
+
+        AuthResponse<Object> response = AuthResponse.builder()
+                                                        .request("AUTH CODE VERIFICATION")
+                                                        .resultDetails(responseDto)
+                                            .build();
+
+        return new Response<>(VERIFICATION_CODE_MATCH,response);
+    }
+
 }
 
 
