@@ -12,11 +12,12 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor(access = PRIVATE)
 @AllArgsConstructor
 @JsonInclude(NON_NULL)
-public class AuthResponse {
+public class AuthResponse<T> {
 
-    private  Long memberId;
+    private Long memberId;
 
-    private  String request;
-;
+    private String request;
+
+    private T resultDetails;
 
 }

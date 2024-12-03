@@ -30,7 +30,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.time.Year;
 import java.util.List;
-import java.util.Set;
+import static boardProject.global.exception.StatusCode.DUPLICATE_MAIL;
 
 @Slf4j
 @Component
@@ -42,7 +42,6 @@ public class MemberServiceHelper {
     private final MemberMapper mapper;
 
     private final EncryptionKeyFactory keyFactory;
-
 
 
     /** DB 접근 메서드 **/
@@ -120,9 +119,9 @@ public class MemberServiceHelper {
 
     /** 검증 메서드 **/
 
-    public void checkMemberExistOrThrow(Long memberId) throws BusinessLogicException {
-        if (!memberRepository.existsById(memberId)) {
-            throw new BusinessLogicException(StatusCode.MEMBER_NOT_EXIST);
+    public void checkDuplicateMember(String email) throws BusinessLogicException {
+        if (memberRepository.existsByEmail(email)) {
+            throw new BusinessLogicException(DUPLICATE_MAIL);
         }
     }
 

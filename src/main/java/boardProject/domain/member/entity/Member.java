@@ -35,7 +35,6 @@ public class Member extends BaseEntity {
     @NotNull
     private int age;
 
-
     @Column
     @NotNull
     private String gender;
@@ -63,8 +62,8 @@ public class Member extends BaseEntity {
     private String description;
 
     @Column
+    @Builder.Default
     private List<String> roles = new ArrayList<>();
-
 
     @OneToMany(mappedBy = "member")
     @Builder.Default
