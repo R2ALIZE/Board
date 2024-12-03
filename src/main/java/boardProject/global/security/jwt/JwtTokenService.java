@@ -1,10 +1,10 @@
 package boardProject.global.security.jwt;
 
 import boardProject.domain.member.entity.Member;
-import boardProject.global.security.encryption.key.asymmetric.RsaKey;
 import boardProject.global.exception.BusinessLogicException;
 import boardProject.global.exception.StatusCode;
-import boardProject.global.redis.util.RedisUtil;
+import boardProject.global.redis.util.RedisService;
+import boardProject.global.security.encryption.key.asymmetric.RsaKey;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.security.PublicKey;
+import java.security.PrivateKey;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -33,10 +33,9 @@ public class JwtTokenService {
 
     private final JwtTokenGenerator jwtTokenGenerator;
 
-    private final RedisUtil redisUtil;
+    private final RedisService redisService;
 
     private final RsaKey rsaKey;
-
 
 
     public String allocateAccessToken (Member member) {
@@ -61,14 +60,15 @@ public class JwtTokenService {
 
     public Claims validateJwtToken (String jwt) {
 
-        PublicKey publicKey = rsaKey.getPublicKey();
+        PrivateKey privateKey = rsaKey.getPrivateKey();
 
         try {
             Claims claims = Jwts.parser()
-                                        .setSigningKey(publicKey)
-                                        .build()
-                                        .parseClaimsJws(jwt)
-                                        .getBody();
+                                         .decryptWith(privateKey)
+                                .build()
+                                         .parseSignedClaims(jwt)
+                                         .getPayload();
+
 
             if (isTokenBlacklisted(claims.getId())) {
                 throw new BusinessLogicException(StatusCode.TOKEN_BLACKLISTED);
@@ -145,19 +145,19 @@ public class JwtTokenService {
 
         long ttlInSeconds = Duration.between(now,expirationDate).getSeconds();
 
-        redisUtil.setBlackList(jti, "blacklisted", ttlInSeconds);
+        redisService.addBlackList(jti, "blacklisted", ttlInSeconds);
 
         log.info(AUTH,"Success to add requested refreshToken to Redis Blacklist");
     }
 
 
     public boolean isTokenBlacklisted(String jti) {
-        return redisUtil.hasKeyBlackList(jti);
+        return redisService.hasKeyBlackList(jti);
     }
 
 
     public void removeFromBlacklist(String token) {
-        redisUtil.deleteBlackList(token);
+        redisService.deleteBlackList(token);
     }
 
 
